@@ -21,9 +21,9 @@ export function Hero() {
   return (
     <section
       id="inicio"
-      className="relative z-[1] box-border flex min-h-svh flex-col justify-between gap-12 overflow-clip px-gutter pt-[clamp(110px,15vh,160px)] pb-[clamp(28px,5vh,48px)]"
+      className="relative z-1 box-border flex min-h-svh flex-col justify-between gap-12 overflow-clip px-gutter pt-[clamp(110px,15vh,160px)] pb-[clamp(28px,5vh,48px)]"
     >
-      <div className="flex flex-wrap justify-between gap-4 font-mono text-[13px] leading-[18px] font-medium tracking-[.04em] text-muted uppercase">
+      <div className="flex flex-wrap justify-between gap-4 font-mono text-[13px] leading-4.5 font-medium tracking-[.04em] text-muted uppercase">
         <span>
           <Typed text="// software a medida" at={300} />
           <span className="intro-fade inline-block" style={delay(1100)}>
@@ -35,12 +35,12 @@ export function Hero() {
 
       <h1 className="m-0 text-[clamp(44px,11.6vw,204px)] leading-[.9] font-bold tracking-[-0.058em] text-ink">
         <span className="sr-only">Software a tu medida</span>
-        <span aria-hidden className="block pb-[.06em] [perspective:900px]">
+        <span aria-hidden className="block pb-[.06em] perspective-[900px]">
           <Chars text="Software" at={0} />
         </span>
-        <span aria-hidden className="block pb-[.06em] whitespace-nowrap [perspective:900px]">
+        <span aria-hidden className="block pb-[.06em] whitespace-nowrap perspective-[900px]">
           <Chars text="a tu medida" at={200} />
-          <span ref={ballRef} data-hero-ball className="pointer-events-none relative z-[3] ml-[.045em] inline-block size-[.19em] will-change-transform">
+          <span ref={ballRef} data-hero-ball className="pointer-events-none relative z-3 ml-[.045em] inline-block size-[.19em] will-change-transform">
             <span className="ball-drop block size-full origin-bottom" style={delay(650)}>
               <span className="ball-roll block size-full" style={delay(650)}>
                 <Ball />
@@ -51,7 +51,7 @@ export function Hero() {
       </h1>
 
       <div className="flex flex-wrap items-end justify-between gap-8">
-        <div className="flex max-w-[480px] flex-col gap-[26px]">
+        <div className="flex max-w-120 flex-col gap-6.5">
           <p className="m-0 text-[clamp(17px,1.45vw,20px)] leading-normal text-pretty text-ink-2">
             {LEAD.split(" ").map((w, i) => (
               <Fragment key={i}>
