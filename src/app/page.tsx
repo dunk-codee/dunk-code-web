@@ -1,7 +1,7 @@
 import { About } from "@/components/about";
 import { Contact } from "@/components/contact";
 import { Hero } from "@/components/hero";
-import { Marquee } from "@/components/marquee";
+import { Intro } from "@/components/intro";
 import { Projects } from "@/components/projects";
 import { RevealObserver } from "@/components/reveal-observer";
 import { Services } from "@/components/services";
@@ -11,10 +11,10 @@ import { SiteHeader } from "@/components/site-header";
 export default function Home() {
   return (
     <>
+      <Intro />
       <SiteHeader />
       <main>
         <Hero />
-        <Marquee />
         <About />
         <Services />
         <Projects view="list" />

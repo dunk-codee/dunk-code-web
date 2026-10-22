@@ -19,7 +19,7 @@ export function SiteHeader() {
   useBodyLock(menuOpen);
   useEscape(() => setMenuOpen(false));
 
-  // The overlay is mobile-only; close it if the viewport grows past the breakpoint.
+  // El menú superpuesto es solo para mobile; se cierra si la ventana supera el breakpoint.
   useEffect(() => {
     const mq = window.matchMedia("(min-width: 47.5rem)");
     const onChange = () => mq.matches && setMenuOpen(false);
@@ -29,7 +29,7 @@ export function SiteHeader() {
 
   return (
     <>
-      <header className="pointer-events-none fixed inset-x-0 top-3.5 z-50 flex justify-center px-3.5">
+      <header className="intro-header pointer-events-none fixed inset-x-0 top-3.5 z-50 flex justify-center px-3.5">
         <nav className="pointer-events-auto flex w-full max-w-[1240px] items-center justify-between gap-4 rounded-full border border-line bg-paper/85 py-2 pr-2 pl-[22px] backdrop-blur-[14px]">
           <a href="#inicio" aria-label="Dunk Code, ir al inicio" className="flex items-baseline text-[22px] leading-none text-ink">
             <span className="font-medium tracking-[-0.045em]">dunk</span>

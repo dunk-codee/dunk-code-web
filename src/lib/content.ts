@@ -8,14 +8,41 @@ export type Project = {
   desc: string;
   stack: string[];
   url?: string;
+  /** Capturas en /public/projects; la primera es la portada. */
+  images?: { src: string; alt: string }[];
 };
 
 export const PROJECTS: Project[] = [
-  { name: "Agenda Norte", cat: "Sistema", type: "Sistema de turnos", year: "2026", desc: "Turnos online y recordatorios automáticos para un consultorio con tres profesionales.", stack: ["React", "Node.js", "PostgreSQL"] },
-  { name: "Liga Barrial", cat: "App", type: "App mobile", year: "2025", desc: "App para organizar el fixture, los resultados y la tabla de posiciones de una liga de básquet amateur.", stack: ["React Native", "Firebase"] },
-  { name: "Pampa Café", cat: "Web", type: "Sitio + tienda", year: "2025", desc: "Sitio institucional con tienda online y pedidos para retirar en el local.", stack: ["Next.js", "Mercado Pago"] },
-  { name: "Stockeo", cat: "Sistema", type: "Panel interno", year: "2024", desc: "Panel de stock y ventas para una distribuidora, con reportes semanales automáticos.", stack: ["Vue", "Laravel", "MySQL"] },
-  { name: "Estudio Ribera", cat: "Web", type: "Sitio web", year: "2024", desc: "Sitio para un estudio de arquitectura, con portfolio administrable.", stack: ["Astro", "Sanity"] },
+  {
+    name: "Don Pancho & Burger",
+    cat: "Sistema",
+    type: "Sitio + sistema de gestión",
+    year: "2026",
+    desc: "Sitio para una hamburguesería con la carta completa y pedidos online para delivery o retiro, incluso programados cuando el local está cerrado. Detrás, un panel propio para el local: pedidos en vivo, venta de mostrador, caja, ventas, gastos y la carta con precios editables.",
+    stack: ["Next.js", "Cloudinary"],
+    url: "https://www.donpanchoyburger.com.ar/",
+    images: [
+      { src: "/projects/donpancho-hero.webp", alt: "Portada del sitio de Don Pancho & Burger" },
+      { src: "/projects/donpancho-menu.webp", alt: "Carta online de Don Pancho & Burger" },
+      { src: "/projects/donpancho-mostrador-admin.webp", alt: "Panel de administración: venta de mostrador" },
+      { src: "/projects/donpancho-menu-admin.webp", alt: "Panel de administración: edición de la carta" },
+    ],
+  },
+  {
+    name: "CTI Gualeguaychú",
+    cat: "Web",
+    type: "Sitio institucional",
+    year: "2026",
+    desc: "Sitio para un centro terapéutico interdisciplinario: especialidades, un directorio de profesionales con buscador y página propia para cada uno, turnos directos por WhatsApp y un portal privado para el staff.",
+    stack: ["Next.js"],
+    url: "https://www.centroterapeuticointegral.com.ar/",
+    images: [
+      { src: "/projects/cti-hero.webp", alt: "Portada del sitio del Centro Terapéutico Integral" },
+      { src: "/projects/cti-especialidades.webp", alt: "Especialidades del Centro Terapéutico Integral" },
+      { src: "/projects/cti-profesionales.webp", alt: "Directorio de profesionales del Centro Terapéutico Integral con buscador" },
+      { src: "/projects/cti-instalaciones.webp", alt: "Instalaciones y consultorios del Centro Terapéutico Integral" },
+    ],
+  },
 ];
 
 export const SERVICES = [
@@ -26,7 +53,7 @@ export const SERVICES = [
 
 export const ABOUT =
   "Somos Dunk Code, un estudio de desarrollo formado por dos amigos. Diseñamos y programamos software a medida para negocios que necesitan una herramienta propia.";
-/** Words of ABOUT highlighted in orange once lit. */
+/** Palabras de ABOUT que se resaltan en naranja al encenderse. */
 export const ABOUT_ACCENT = "software a medida";
 
 export const NAV = [
@@ -39,11 +66,9 @@ export const NAV = [
 export const FILTERS = ["Todos", "Web", "App", "Sistema"] as const;
 export type Filter = (typeof FILTERS)[number];
 
-export const MARQUEE = ["Sitios web", "Web apps", "Sistemas a medida", "Apps mobile", "Integraciones", "Automatizaciones"];
-
 export type TeamMember = { name: string; role: string; photo?: string };
 
-// Drop photos into /public/team and set `photo: "/team/mateo.jpg"`.
+// Poné las fotos en /public/team y usá `photo: "/team/mateo.jpg"`.
 export const TEAM: TeamMember[] = [
   { name: "Mateo del Valle", role: "[CARGO]" },
   { name: "[TU NOMBRE]", role: "[CARGO]" },

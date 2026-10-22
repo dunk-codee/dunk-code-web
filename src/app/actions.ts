@@ -11,7 +11,7 @@ export async function sendContact(input: ContactInput): Promise<ContactResult> {
   const apiKey = process.env.RESEND_API_KEY;
   const to = process.env.CONTACT_TO_EMAIL;
   if (!apiKey || !to) {
-    // No mail provider configured yet: log so local development still works.
+    // Todavía no hay proveedor de mail configurado: se loguea para que el desarrollo local funcione igual.
     console.info("[contacto]", data);
     return { ok: true };
   }

@@ -40,7 +40,7 @@ src/
     hooks.ts           # hooks de cliente compartidos
 ```
 
-Orden de la página (`page.tsx`): `SiteHeader` → `Hero` → `Marquee` → `About` (#nosotros) → `Services` (#servicios) → `Projects` (#proyectos) → `Contact` (#contacto) → `SiteFooter` + `RevealObserver`.
+Orden de la página (`page.tsx`): `Intro` → `SiteHeader` → `Hero` → `About` (#nosotros) → `Services` (#servicios) → `Projects` (#proyectos) → `Contact` (#contacto) → `SiteFooter` + `RevealObserver`.
 
 Los ids de sección deben coincidir con `NAV` en `lib/content.ts` (el header calcula la sección activa con ellos).
 
@@ -64,7 +64,8 @@ Pendientes de completar (placeholders): `TEAM` (`[TU NOMBRE]`, `[CARGO]`, fotos 
 - Easing de marca: `ease-snap` / `var(--ease-snap)`.
 - Utilidades custom: `px-gutter`, `eyebrow`, `label-mono`, `stripes-dark`, `stripes-light`.
 - Animaciones Tailwind: `animate-fade`, `animate-modal-up`, `animate-hint`, `animate-thanks-drop`.
-- Clases de intro (`intro-line`, `intro-fade`, `intro-clip`, `ball-drop`, `ball-roll`) son CSS plano dentro de `prefers-reduced-motion: no-preference` para que corran antes de la hidratación.
+- Clases de intro (`intro*`, `ball-drop`, `ball-roll`) son CSS plano dentro de `prefers-reduced-motion: no-preference` para que corran antes de la hidratación.
+- **Comentarios del código en español** (los nombres de variables, funciones y componentes quedan en inglés).
 - Estilo de código: tamaños fluidos con `clamp()` en clases arbitrarias de Tailwind; secciones con `max-w-[1240px] mx-auto`; los rótulos tipo `01 {"// quiénes somos"}` usan comentarios estilo código como recurso visual.
 
 ## Patrones de interacción / animación
@@ -76,9 +77,14 @@ Pendientes de completar (placeholders): `TEAM` (`[TU NOMBRE]`, `[CARGO]`, fotos 
   - `useBodyLock(locked)`, `useEscape(fn)` — para menú y modal.
 - Las animaciones por scroll mutan `element.style` directamente vía refs (no setState) para evitar re-renders.
 - `RevealObserver`: cualquier elemento con `data-reveal="N"` aparece con fade+lift al entrar en viewport, con delay N×100ms. Solo afecta elementos debajo del fold al cargar.
-- `Hero`: la pelota hace zoom hasta cubrir la pantalla al scrollear (`ballZoom`), y los elementos `data-herofade` se desvanecen.
-- `Marquee`: loop rAF continuo cuya velocidad sube con la velocidad de scroll.
-- `Projects`: filtro por categoría, vista `"list"` (usada) o `"grid"` (disponible, no usada), preview flotante que sigue al cursor (solo dispositivos con hover y ≥760px) y `ProjectModal` con foco gestionado, Escape y "Siguiente proyecto".
+- `Intro` (`intro.tsx`): pantalla de carga — tiro en parábola al aro, swish de la red, "+2" y un telón que sube. El telón y el aro son CSS puro; la pelota (`intro-ball.tsx`) vive en una capa encima del telón: CSS juega el tiro antes de hidratar y después JS (Web Animations, anclado al mismo reloj) sigue el vuelo — pica abajo de la pantalla, hace un arco y aterriza con rebotes amortiguados sobre la pelota del título (`[data-hero-ball]`), que recién ahí se hace visible. Las constantes de `intro-ball.tsx` deben coincidir con los keyframes `shot-*` de `globals.css`. Si la hidratación llega tarde, queda el fallback CSS (la pelota cae y la del título hace su `ball-drop`). `INTRO_MS` marca cuándo arranca el telón; las entradas del hero se calculan desde ahí (y `.intro-header` en `globals.css` tiene ese valor + 300ms escrito a mano: mantenerlos sincronizados). No se muestra con reduced motion.
+- `Hero`: letras que se paran una a una (`Chars`, flip 3D + blur), rótulos tipeados (`Typed`), párrafo palabra por palabra y botones que se abren como píldora. Botones con texto que rueda en hover (`RollText`). Al scrollear la pelota solo gira (sin zoom).
+- Tailwind 4.3 descarta custom properties propias declaradas en `globals.css` (`:root { --x }`, incluso dentro de `@theme`): para tiempos/valores compartidos usar constantes TS, no variables CSS.
+- El espacio a la derecha del título del hero queda en blanco a propósito. Ya se probaron y descartaron ahí: un mazo de capturas, una grilla de recortes, una consola de código y una trayectoria punteada con etiqueta de disponibilidad.
+- Chrome no anima elementos dentro de `<mask>`/`<defs>` de SVG: animar elementos visibles.
+- Evento `project:open` (detail = índice en `PROJECTS`): `Projects` lo escucha para abrir el modal desde cualquier parte de la página.
+- Capturas de proyectos: sacarlas con Edge headless a 2x (`msedge --headless=new --force-device-scale-factor=2 --window-size=1440,900 --screenshot=… URL`) y recortar/exportar con PIL; las capturas del navegador de Claude salen a baja resolución y en JPEG, y se ven pixeladas.
+- `Projects`: filtro por categoría (solo categorías con proyectos; se oculta si hay una sola), vista `"list"` (usada) o `"grid"` (disponible, no usada), preview flotante que sigue al cursor (solo dispositivos con hover y ≥760px) y `ProjectModal` con foco gestionado, Escape y "Siguiente proyecto".
 - Accesibilidad cuidada: `aria-pressed`, `aria-expanded`/`aria-controls`, `inert` en acordeones cerrados, `role="dialog"` + `aria-modal`, decorativos con `aria-hidden`. Mantener ese nivel.
 
 ## Estado del repo

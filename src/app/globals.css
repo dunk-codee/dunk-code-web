@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --breakpoint-md: 47.5rem; /* 760px: desktop nav / project meta */
+  --breakpoint-md: 47.5rem; /* 760px: nav de escritorio / datos de proyectos */
 
   --color-ink: #121212;
   --color-ink-2: #2a2a28;
@@ -26,6 +26,7 @@
   --animate-modal-up: modal-up 0.55s var(--ease-snap) both;
   --animate-hint: hint 1.4s ease-in-out infinite;
   --animate-thanks-drop: thanks-drop 1.2s cubic-bezier(0.3, 0, 0.3, 1) both;
+  --animate-blink: blink 1.1s steps(1) infinite;
 
   @keyframes fade {
     from { opacity: 0; }
@@ -47,19 +48,74 @@
     90% { transform: translateY(-14px); }
     100% { transform: translateY(0); }
   }
+  @keyframes blink {
+    50% { opacity: 0; }
+  }
 }
 
-/* Intro + ball keyframes (used via plain classes below so they run before hydration). */
-@keyframes line-up {
-  from { transform: translateY(112%); }
-  to { transform: translateY(0); }
-}
+/* Keyframes de la intro y la pelota (se usan con clases planas, abajo, para que corran antes de hidratar). */
 @keyframes hero-fade {
   from { opacity: 0; transform: translateY(18px); }
   to { opacity: 1; transform: none; }
 }
-@keyframes unclip {
-  to { clip-path: inset(-300vh -100vw -300vh -100vw); }
+@keyframes drop-in {
+  from { opacity: 0; transform: translateY(-24px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes char-in {
+  from { opacity: 0; transform: translateY(0.3em) rotateX(-80deg); filter: blur(10px); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+@keyframes word-in {
+  from { opacity: 0; transform: translateY(0.6em); filter: blur(6px); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+@keyframes type {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0); }
+}
+@keyframes pill-in {
+  from { clip-path: inset(0 100% 0 0 round 999px); transform: translateX(-12px); }
+  to { clip-path: inset(0 0 0 0 round 999px); transform: none; }
+}
+
+/* Intro de carga: tiro (x lineal, y como parábola real), swish de la red y telón. */
+@keyframes shot-x {
+  0% { translate: -3em 0; animation-timing-function: linear; }
+  70% { translate: 17em 0; animation-timing-function: ease-out; }
+  100% { translate: 17.3em 0; }
+}
+@keyframes shot-y {
+  0% { translate: 0 19em; animation-timing-function: cubic-bezier(0.33, 0.67, 0.67, 1); }
+  43.5% { translate: 0 0; animation-timing-function: cubic-bezier(0.33, 0, 0.67, 0.33); }
+  70% { translate: 0 7em; animation-timing-function: cubic-bezier(0.3, 0.5, 0.5, 1); }
+  84% { translate: 0 11.5em; animation-timing-function: cubic-bezier(0.5, 0, 1, 1); }
+  100% { translate: 0 22em; }
+}
+@keyframes shot-spin {
+  0% { rotate: 0deg; scale: 1.5; opacity: 0; }
+  6% { opacity: 1; }
+  70% { scale: 1; }
+  88% { opacity: 1; }
+  100% { rotate: -600deg; scale: 1; opacity: 0; }
+}
+@keyframes swish {
+  0%, 100% { transform: none; }
+  25% { transform: scale(0.84, 1.22); }
+  55% { transform: scale(1.05, 0.94); }
+  80% { transform: scale(0.98, 1.03); }
+}
+@keyframes score {
+  0% { opacity: 0; transform: translateY(0.5em) scale(0.6); }
+  25% { opacity: 1; transform: none; }
+  100% { opacity: 0; transform: translateY(-1.2em); }
+}
+@keyframes stage-out {
+  to { opacity: 0; transform: translateY(-14vh); }
+}
+@keyframes curtain {
+  from { clip-path: inset(0); }
+  to { clip-path: inset(0 0 100% 0); visibility: hidden; }
 }
 @keyframes ball-drop {
   0% { transform: translateY(var(--drop-from, -110vh)); animation-timing-function: cubic-bezier(0.55, 0, 1, 0.45); }
@@ -124,15 +180,58 @@
     scroll-behavior: smooth;
   }
 
-  .intro-line {
-    animation: line-up 1.1s var(--ease-snap) backwards;
+  .intro {
+    display: block;
+    animation: curtain 0.9s cubic-bezier(0.76, 0, 0.24, 1) 1.4s forwards;
+  }
+  .intro-layer {
+    display: flex;
+  }
+  .intro-hoop {
+    animation:
+      hero-fade 0.5s var(--ease-snap) backwards,
+      stage-out 0.7s cubic-bezier(0.76, 0, 0.24, 1) 1.4s forwards;
+  }
+  .intro-ball-x {
+    animation: shot-x 1.1s 0.2s both;
+  }
+  .intro-ball-y {
+    animation: shot-y 1.1s 0.2s both;
+  }
+  .intro-ball-spin {
+    animation: shot-spin 1.1s linear 0.2s both;
+  }
+  .intro-net {
+    transform-box: fill-box;
+    transform-origin: 50% 0;
+    animation: swish 0.55s ease-out 0.95s;
+  }
+  .intro-score {
+    animation: score 0.9s var(--ease-snap) 1s;
+  }
+  .intro-caption {
+    animation: fade 0.4s 0.3s backwards;
+  }
+
+  /* 1.8s = INTRO_MS (intro.tsx) + 300ms. */
+  .intro-header {
+    animation: drop-in 0.9s var(--ease-snap) 1.8s backwards;
   }
   .intro-fade {
     animation: hero-fade 0.9s var(--ease-snap) backwards;
   }
-  .intro-clip {
-    clip-path: inset(-300vh -100vw 0 -100vw);
-    animation: unclip 0s 2.3s forwards;
+  .intro-char {
+    transform-origin: 50% 100%;
+    animation: char-in 1s var(--ease-snap) backwards;
+  }
+  .intro-word {
+    animation: word-in 0.8s var(--ease-snap) backwards;
+  }
+  .intro-type {
+    animation: type calc(var(--n) * 40ms) steps(var(--n)) backwards;
+  }
+  .intro-pill {
+    animation: pill-in 0.9s var(--ease-snap) backwards;
   }
   .ball-drop {
     animation: ball-drop 1.5s backwards;

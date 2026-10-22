@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { Ball } from "./ball";
 import { prefersReducedMotion, useScrollFrame } from "@/lib/hooks";
 
-/** Decorative ball that rotates with page scroll. */
+/** Pelota decorativa que gira con el scroll de la página. */
 export function SpinBall({ className }: { className: string }) {
   const ref = useRef<HTMLDivElement>(null);
   useScrollFrame(() => {

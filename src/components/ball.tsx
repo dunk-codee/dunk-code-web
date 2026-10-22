@@ -1,4 +1,4 @@
-/** The Dunk Code basketball mark. Sizes to its container. */
+/** La pelota de básquet de Dunk Code. Toma el tamaño de su contenedor. */
 export function Ball({ stroke = 5, className = "" }: { stroke?: number; className?: string }) {
   return (
     <svg viewBox="0 0 100 100" aria-hidden className={`block size-full overflow-hidden rounded-full ${className}`}>

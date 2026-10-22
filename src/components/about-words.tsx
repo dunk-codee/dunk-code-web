@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { prefersReducedMotion, useScrollFrame } from "@/lib/hooks";
 
-/** Paragraph whose words light up one by one as the section scrolls into view. */
+/** Párrafo cuyas palabras se encienden una por una a medida que la sección entra en pantalla. */
 export function AboutWords({ words }: { words: { t: string; accent: boolean }[] }) {
   const ref = useRef<HTMLParagraphElement>(null);
   const lit = useRef(-1);

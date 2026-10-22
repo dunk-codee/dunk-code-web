@@ -1,11 +1,15 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import type { Project } from "@/lib/content";
 import { useBodyLock, useEscape } from "@/lib/hooks";
 
-export function ProjectModal({ project, onClose, onNext }: { project: Project; onClose: () => void; onNext: () => void }) {
+export function ProjectModal({ project, onClose, onNext }: { project: Project; onClose: () => void; onNext?: () => void }) {
   const closeRef = useRef<HTMLButtonElement>(null);
+  const images = project.images ?? [];
+  const [shot, setShot] = useState(0);
   useBodyLock(true);
   useEscape(onClose);
 
@@ -15,7 +19,8 @@ export function ProjectModal({ project, onClose, onNext }: { project: Project; o
     return () => prev?.focus();
   }, []);
 
-  return (
+  // Portal a <body> para que el stacking context de la sección de proyectos no lo deje debajo de las secciones siguientes.
+  return createPortal(
     <div
       onClick={onClose}
       className="fixed inset-0 z-80 flex animate-fade items-center justify-center bg-ink/60 p-4 backdrop-blur-[8px]"
@@ -36,9 +41,40 @@ export function ProjectModal({ project, onClose, onNext }: { project: Project; o
         >
           ✕
         </button>
-        <div className="box-border flex aspect-[16/8] items-end border-b border-line bg-[repeating-linear-gradient(135deg,var(--color-sand)_0_14px,var(--color-paper)_14px_28px)] p-5 font-mono text-xs font-medium text-muted">
-          {`// captura de ${project.name}`}
-        </div>
+        {images.length ? (
+          <div className="border-b border-line bg-sand">
+            <div className="relative aspect-[16/8]">
+              <Image
+                key={images[shot].src}
+                src={images[shot].src}
+                alt={images[shot].alt}
+                fill
+                sizes="(min-width: 1012px) 980px, 100vw"
+                className="animate-fade object-cover object-top"
+              />
+            </div>
+            {images.length > 1 && (
+              <div className="flex gap-2 p-3">
+                {images.map((img, i) => (
+                  <button
+                    key={img.src}
+                    type="button"
+                    onClick={() => setShot(i)}
+                    aria-label={`Ver captura ${i + 1}: ${img.alt}`}
+                    aria-pressed={shot === i}
+                    className={`relative aspect-[16/8] w-24 overflow-hidden rounded-lg border-2 transition-colors ${shot === i ? "border-ink" : "border-transparent opacity-60 hover:opacity-100"}`}
+                  >
+                    <Image src={img.src} alt="" fill sizes="96px" className="object-cover object-top" />
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        ) : (
+          <div className="box-border flex aspect-[16/8] items-end border-b border-line bg-[repeating-linear-gradient(135deg,var(--color-sand)_0_14px,var(--color-paper)_14px_28px)] p-5 font-mono text-xs font-medium text-muted">
+            {`// captura de ${project.name}`}
+          </div>
+        )}
         <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,280px),1fr))] gap-x-12 gap-y-8 p-[clamp(24px,4vw,48px)]">
           <div className="flex flex-col gap-3.5">
             <span className="eyebrow text-orange-deep">
@@ -67,17 +103,20 @@ export function ProjectModal({ project, onClose, onNext }: { project: Project; o
               >
                 Visitar sitio ↗
               </a>
-              <button
-                type="button"
-                onClick={onNext}
-                className="h-12 rounded-full border border-ink px-[22px] text-[15px] font-medium text-ink transition-colors hover:bg-ink hover:text-paper"
-              >
-                Siguiente proyecto →
-              </button>
+              {onNext && (
+                <button
+                  type="button"
+                  onClick={onNext}
+                  className="h-12 rounded-full border border-ink px-[22px] text-[15px] font-medium text-ink transition-colors hover:bg-ink hover:text-paper"
+                >
+                  Siguiente proyecto →
+                </button>
+              )}
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

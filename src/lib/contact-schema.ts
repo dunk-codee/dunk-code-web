@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const TIPOS = ["Sitio web", "App", "Sistema", "Otro"] as const;
 
-// Shared by the client (instant feedback) and the Server Action (source of truth).
+// Lo comparten el cliente (feedback inmediato) y la Server Action (fuente de verdad).
 export const contactSchema = z.object({
   name: z.string().trim().min(1, "Contanos tu nombre."),
   email: z.string().trim().regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Revisá el email."),

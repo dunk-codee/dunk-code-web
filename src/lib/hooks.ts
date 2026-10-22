@@ -20,7 +20,7 @@ export function useReducedMotion() {
   );
 }
 
-/** Runs `onFrame` at most once per animation frame while the page scrolls or resizes. */
+/** Corre `onFrame` como máximo una vez por frame mientras la página scrollea o cambia de tamaño. */
 export function useScrollFrame(onFrame: () => void) {
   const run = useEffectEvent(onFrame);
   useEffect(() => {
@@ -39,7 +39,7 @@ export function useScrollFrame(onFrame: () => void) {
   }, []);
 }
 
-/** Locks page scroll while `locked` is true (menu / modal). */
+/** Bloquea el scroll de la página mientras `locked` sea true (menú / modal). */
 export function useBodyLock(locked: boolean) {
   useEffect(() => {
     if (!locked) return;

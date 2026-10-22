@@ -4,8 +4,8 @@ import { useEffect } from "react";
 import { prefersReducedMotion } from "@/lib/hooks";
 
 /**
- * Fades + lifts every `[data-reveal]` element below the fold as it scrolls into view.
- * The attribute value is the stagger step (×100ms).
+ * Hace aparecer (fade + subida) cada elemento `[data-reveal]` debajo del pliegue cuando entra en pantalla.
+ * El valor del atributo es el paso del escalonado (×100ms).
  */
 export function RevealObserver() {
   useEffect(() => {

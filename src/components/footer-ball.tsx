@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { Ball } from "./ball";
 import { prefersReducedMotion } from "@/lib/hooks";
 
-/** The "dot" of the footer wordmark: drops in like a basketball the first time it scrolls into view. */
+/** El "punto" del logo del footer: cae como una pelota de básquet la primera vez que entra en pantalla. */
 export function FooterBall() {
   const ref = useRef<HTMLSpanElement>(null);
   const [phase, setPhase] = useState<"idle" | "waiting" | "dropping">("idle");

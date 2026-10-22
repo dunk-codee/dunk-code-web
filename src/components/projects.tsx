@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { FILTERS, PROJECTS, type Filter } from "@/lib/content";
 import { prefersReducedMotion } from "@/lib/hooks";
@@ -7,14 +8,26 @@ import { ProjectModal } from "./project-modal";
 
 export type ProjectView = "list" | "grid";
 
+// Solo se ofrecen categorías que tienen proyectos; con una sola categoría no hay nada que filtrar.
+const AVAILABLE = FILTERS.filter((f) => f === "Todos" || PROJECTS.some((p) => p.cat === f));
+
 export function Projects({ view = "list" }: { view?: ProjectView }) {
   const [filter, setFilter] = useState<Filter>("Todos");
   const [hover, setHover] = useState(-1);
   const [sel, setSel] = useState<number | null>(null);
 
   const list = PROJECTS.map((p, gi) => ({ ...p, gi })).filter((p) => filter === "Todos" || p.cat === filter);
-  const hoverName = useLastDefined(hover >= 0 ? list[hover]?.name : undefined);
+  const hoveredGi = useLastDefined(hover >= 0 ? list[hover]?.gi : undefined);
+  const hovered = hoveredGi === undefined ? undefined : PROJECTS[hoveredGi];
+  const cover = hovered?.images?.[0];
   const previewRef = useCursorPreview(view === "list" && hover >= 0 && sel === null);
+
+  // Otros componentes abren un proyecto disparando este evento.
+  useEffect(() => {
+    const onOpen = (e: Event) => setSel((e as CustomEvent<number>).detail);
+    addEventListener("project:open", onOpen);
+    return () => removeEventListener("project:open", onOpen);
+  }, []);
 
   return (
     <section id="proyectos" className="relative z-[2] bg-sand px-gutter py-[clamp(90px,11vw,160px)]">
@@ -29,8 +42,8 @@ export function Projects({ view = "list" }: { view?: ProjectView }) {
               </span>
             </h2>
           </div>
-          <div data-reveal="1" role="group" aria-label="Filtrar proyectos" className="flex flex-wrap gap-2">
-            {FILTERS.map((f) => {
+          {AVAILABLE.length > 2 && <div data-reveal="1" role="group" aria-label="Filtrar proyectos" className="flex flex-wrap gap-2">
+            {AVAILABLE.map((f) => {
               const active = filter === f;
               return (
                 <button
@@ -44,7 +57,7 @@ export function Projects({ view = "list" }: { view?: ProjectView }) {
                 </button>
               );
             })}
-          </div>
+          </div>}
         </div>
 
         {view === "list" ? (
@@ -91,8 +104,12 @@ export function Projects({ view = "list" }: { view?: ProjectView }) {
                 onClick={() => setSel(p.gi)}
                 className="flex flex-col gap-4 rounded-3xl bg-paper p-3 text-left text-ink transition-[transform,box-shadow] duration-400 ease-snap hover:-translate-y-1.5 hover:shadow-[0_24px_48px_-24px_rgba(18,18,18,.35)]"
               >
-                <span className="stripes-light box-border flex aspect-[4/3] w-full items-end rounded-2xl border border-line p-4 font-mono text-xs font-medium text-muted">
-                  {"// captura del proyecto"}
+                <span className="stripes-light relative box-border flex aspect-[4/3] w-full items-end overflow-hidden rounded-2xl border border-line p-4 font-mono text-xs font-medium text-muted">
+                  {p.images?.[0] ? (
+                    <Image src={p.images[0].src} alt={p.images[0].alt} fill sizes="(min-width: 760px) 33vw, 100vw" className="object-cover object-top" />
+                  ) : (
+                    "// captura del proyecto"
+                  )}
                 </span>
                 <span className="flex w-full items-baseline justify-between gap-3 px-1.5 pb-1.5">
                   <span className="text-[26px] leading-[1.15] font-medium tracking-[-0.03em]">{p.name}</span>
@@ -106,38 +123,45 @@ export function Projects({ view = "list" }: { view?: ProjectView }) {
         )}
       </div>
 
-      {/* Floating preview that follows the cursor over the list (pointer devices only). */}
+      {/* Vista previa flotante que sigue al cursor sobre la lista (solo dispositivos con puntero). */}
       <div
         ref={previewRef}
         aria-hidden
         className="stripes-light pointer-events-none fixed top-0 left-0 z-60 box-border flex aspect-[4/3] w-[300px] flex-col justify-between overflow-hidden rounded-[18px] border border-line p-4 opacity-0 shadow-[0_30px_60px_-20px_rgba(18,18,18,.4)] will-change-[transform,opacity]"
       >
-        <span className="font-mono text-xs font-medium text-muted">{"// captura del proyecto"}</span>
-        <span className="flex items-center gap-2.5 text-[22px] leading-[1.1] font-medium tracking-[-0.03em] text-ink">
-          <span className="size-2.5 rounded-full bg-orange" />
-          {hoverName}
-        </span>
+        {cover ? (
+          <Image src={cover.src} alt="" fill sizes="300px" className="object-cover object-top" />
+        ) : (
+          <>
+            <span className="font-mono text-xs font-medium text-muted">{"// captura del proyecto"}</span>
+            <span className="flex items-center gap-2.5 text-[22px] leading-[1.1] font-medium tracking-[-0.03em] text-ink">
+              <span className="size-2.5 rounded-full bg-orange" />
+              {hovered?.name}
+            </span>
+          </>
+        )}
       </div>
 
       {sel !== null && (
         <ProjectModal
+          key={sel}
           project={PROJECTS[sel]}
           onClose={() => setSel(null)}
-          onNext={() => setSel((s) => ((s ?? 0) + 1) % PROJECTS.length)}
+          onNext={PROJECTS.length > 1 ? () => setSel((s) => ((s ?? 0) + 1) % PROJECTS.length) : undefined}
         />
       )}
     </section>
   );
 }
 
-/** Keeps the last non-undefined value so the preview label doesn't blank out while fading. */
+/** Conserva el último valor definido para que la vista previa no quede vacía mientras se desvanece. */
 function useLastDefined<T>(value: T | undefined) {
   const [last, setLast] = useState(value);
   if (value !== undefined && value !== last) setLast(value);
   return value ?? last;
 }
 
-/** Spring-follows the mouse with a slight tilt; fades in while `active`. */
+/** Sigue al mouse con un resorte y una leve inclinación; aparece mientras `active` sea true. */
 function useCursorPreview(active: boolean) {
   const ref = useRef<HTMLDivElement>(null);
   const activeRef = useRef(active);
@@ -170,7 +194,7 @@ function useCursorPreview(active: boolean) {
       const rot = Math.max(-10, Math.min(10, (s.x - ox) * 0.35));
       el.style.opacity = s.o.toFixed(3);
       el.style.transform = `translate(${s.x + 24}px,${s.y}px) translate(0,-50%) rotate(${rot}deg) scale(${0.85 + s.o * 0.15})`;
-      // Stop the loop once fully faded out.
+      // Corta el loop cuando terminó de desvanecerse.
       s.raf = on || s.o > 0.001 ? requestAnimationFrame(tick) : 0;
     };
     cancelAnimationFrame(s.raf);
