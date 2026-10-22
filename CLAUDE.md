@@ -85,4 +85,4 @@ Pendientes de completar (placeholders): `TEAM` (`[TU NOMBRE]`, `[CARGO]`, fotos 
 
 Remoto: https://github.com/dunk-codee/dunk-code-web (rama `main`). Lo trabajan dos personas en paralelo: hacer `git pull` antes de empezar.
 
-**Todos los datos son mockup** (proyectos, textos del equipo, canales de contacto, servicios): se van a ir reemplazando por los reales. No asumir que ningún dato de `content.ts` es definitivo. El `README.md` sigue siendo el default de create-next-app.
+**Todos los datos son mockup** (proyectos, textos del equipo, canales de contacto, servicios): se van a ir reemplazando por los reales. No asumir que ningún dato de `content.ts` es definitivo. Por ahora no hay `README.md` (se borró el default).
