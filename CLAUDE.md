@@ -83,4 +83,6 @@ Pendientes de completar (placeholders): `TEAM` (`[TU NOMBRE]`, `[CARGO]`, fotos 
 
 ## Estado del repo
 
-Git con un solo commit (el de create-next-app); todo el trabajo actual está sin commitear. El `README.md` es el default de create-next-app.
+Remoto: https://github.com/dunk-codee/dunk-code-web (rama `main`). Lo trabajan dos personas en paralelo: hacer `git pull` antes de empezar.
+
+**Todos los datos son mockup** (proyectos, textos del equipo, canales de contacto, servicios): se van a ir reemplazando por los reales. No asumir que ningún dato de `content.ts` es definitivo. El `README.md` sigue siendo el default de create-next-app.
