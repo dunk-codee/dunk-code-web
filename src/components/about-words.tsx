@@ -1,0 +1,38 @@
+"use client";
+
+import { useRef } from "react";
+import { prefersReducedMotion, useScrollFrame } from "@/lib/hooks";
+
+/** Paragraph whose words light up one by one as the section scrolls into view. */
+export function AboutWords({ words }: { words: { t: string; accent: boolean }[] }) {
+  const ref = useRef<HTMLParagraphElement>(null);
+  const lit = useRef(-1);
+
+  useScrollFrame(() => {
+    const p = ref.current;
+    if (!p) return;
+    const vh = innerHeight;
+    const progress = prefersReducedMotion()
+      ? 1
+      : Math.min(1, Math.max(0, (vh * 0.78 - p.getBoundingClientRect().top) / (vh * 0.6)));
+    const n = Math.round(progress * words.length);
+    if (n === lit.current) return;
+    lit.current = n;
+    p.querySelectorAll<HTMLElement>("[data-w]").forEach((w, i) => {
+      w.style.color = i < n ? (w.dataset.accent ? "var(--color-orange)" : "var(--color-paper)") : "var(--color-dim)";
+    });
+  });
+
+  return (
+    <p
+      ref={ref}
+      className="m-0 max-w-[1040px] text-[clamp(30px,4.6vw,66px)] leading-[1.08] font-medium tracking-[-0.035em] text-pretty"
+    >
+      {words.map((w, i) => (
+        <span key={i} data-w data-accent={w.accent || undefined} className="text-paper transition-colors duration-350">
+          {w.t}{" "}
+        </span>
+      ))}
+    </p>
+  );
+}

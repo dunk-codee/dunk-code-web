@@ -1,26 +1,143 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@theme {
+  --breakpoint-md: 47.5rem; /* 760px: desktop nav / project meta */
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-ink: #121212;
+  --color-ink-2: #2a2a28;
+  --color-ink-3: #1a1a19;
+  --color-ink-4: #232321;
+  --color-dim: #46453f;
+  --color-muted: #5c5b57;
+  --color-subtle: #9c9a93;
+  --color-line-2: #c9c7bf;
+  --color-line: #d9d7cf;
+  --color-sand: #e9e7e0;
+  --color-paper: #f6f5f1;
+  --color-orange: #ff4d1c;
+  --color-orange-deep: #c9360a;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  --font-sans: var(--font-space-grotesk), system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+
+  --ease-snap: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  --animate-fade: fade 0.3s both;
+  --animate-modal-up: modal-up 0.55s var(--ease-snap) both;
+  --animate-hint: hint 1.4s ease-in-out infinite;
+  --animate-thanks-drop: thanks-drop 1.2s cubic-bezier(0.3, 0, 0.3, 1) both;
+
+  @keyframes fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes modal-up {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: none; }
+  }
+  @keyframes hint {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-9px); }
+  }
+  @keyframes thanks-drop {
+    0% { transform: translateY(-220px); }
+    40% { transform: translateY(0) scale(1.25, 0.75); }
+    60% { transform: translateY(-60px) scale(0.95, 1.05); }
+    78% { transform: translateY(0) scale(1.1, 0.9); }
+    90% { transform: translateY(-14px); }
+    100% { transform: translateY(0); }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Intro + ball keyframes (used via plain classes below so they run before hydration). */
+@keyframes line-up {
+  from { transform: translateY(112%); }
+  to { transform: translateY(0); }
+}
+@keyframes hero-fade {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes unclip {
+  to { clip-path: inset(-300vh -100vw -300vh -100vw); }
+}
+@keyframes ball-drop {
+  0% { transform: translateY(var(--drop-from, -110vh)); animation-timing-function: cubic-bezier(0.55, 0, 1, 0.45); }
+  40% { transform: translateY(0) scale(1.3, 0.7); animation-timing-function: cubic-bezier(0, 0.55, 0.45, 1); }
+  60% { transform: translateY(-1.3em) scale(0.92, 1.08); animation-timing-function: cubic-bezier(0.55, 0, 1, 0.45); }
+  78% { transform: translateY(0) scale(1.15, 0.85); animation-timing-function: cubic-bezier(0, 0.55, 0.45, 1); }
+  89% { transform: translateY(-0.38em) scale(1); animation-timing-function: cubic-bezier(0.55, 0, 1, 0.45); }
+  96% { transform: translateY(0) scale(1.05, 0.95); }
+  100% { transform: none; }
+}
+@keyframes ball-roll {
+  from { transform: rotate(-340deg); }
+  to { transform: rotate(0deg); }
+}
+
+@utility px-gutter {
+  padding-inline: clamp(20px, 4vw, 56px);
+}
+@utility eyebrow {
+  font: 500 13px/18px var(--font-mono);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+@utility label-mono {
+  font: 500 12px var(--font-mono);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+@utility stripes-dark {
+  background: repeating-linear-gradient(135deg, var(--color-ink-3) 0 12px, var(--color-ink-4) 12px 24px);
+}
+@utility stripes-light {
+  background: repeating-linear-gradient(135deg, var(--color-sand) 0 12px, var(--color-paper) 12px 24px);
+}
+
+@layer base {
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+  ::selection {
+    background: var(--color-orange);
+    color: var(--color-ink);
+  }
+  ::placeholder {
+    color: var(--color-muted);
+  }
+  button {
+    cursor: pointer;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  .intro-line {
+    animation: line-up 1.1s var(--ease-snap) backwards;
+  }
+  .intro-fade {
+    animation: hero-fade 0.9s var(--ease-snap) backwards;
+  }
+  .intro-clip {
+    clip-path: inset(-300vh -100vw 0 -100vw);
+    animation: unclip 0s 2.3s forwards;
+  }
+  .ball-drop {
+    animation: ball-drop 1.5s backwards;
+  }
+  .ball-roll {
+    animation: ball-roll 1.5s cubic-bezier(0.2, 0.7, 0.3, 1) backwards;
+  }
 }
