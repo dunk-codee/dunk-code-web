@@ -61,29 +61,13 @@ export function Hero() {
               </Fragment>
             ))}
           </p>
-          <div className="flex flex-wrap gap-2.5">
-            <a
-              href="#proyectos"
-              className="intro-pill group relative isolate inline-flex h-14 items-center gap-5 overflow-hidden rounded-full bg-ink pr-2 pl-7 text-base font-medium text-paper transition-colors duration-450 hover:text-ink focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange"
-              style={delay(850)}
-            >
-              <RollText>Ver proyectos</RollText>
-              <span aria-hidden className="relative grid size-10 place-items-center">
-                <span className="absolute inset-0 -z-10 rounded-full bg-orange transition-transform duration-600 ease-snap group-hover:scale-[11]" />
-                <span className="font-mono text-ink transition-transform duration-450 ease-snap group-hover:translate-y-0.5">↓</span>
-              </span>
-            </a>
-            <a
-              href="#contacto"
-              className="intro-pill group relative isolate inline-flex h-14 items-center overflow-hidden rounded-full border border-ink px-7 text-base font-medium text-ink transition-colors duration-450 hover:text-paper focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange"
-              style={delay(950)}
-            >
-              <span
-                aria-hidden
-                className="absolute inset-x-0 top-full -z-10 h-[160%] rounded-t-[50%] bg-ink transition-transform duration-500 ease-snap group-hover:-translate-y-full"
-              />
-              <RollText>Hablemos</RollText>
-            </a>
+          <div className="flex flex-wrap items-end gap-x-10 gap-y-5">
+            <UnderLink href="#proyectos" arrow="↓" at={850} primary>
+              Ver proyectos
+            </UnderLink>
+            <UnderLink href="#contacto" arrow="↗" at={950}>
+              Hablemos
+            </UnderLink>
           </div>
         </div>
         <div
@@ -96,6 +80,58 @@ export function Hero() {
         </div>
       </div>
     </section>
+  );
+}
+
+/**
+ * Botón de texto subrayado (como el de enviar en contacto): la línea se dibuja al entrar,
+ * en hover se llena de naranja y la flecha avanza en su dirección.
+ * `primary`: más grande y con la flecha adentro de un círculo naranja.
+ */
+function UnderLink({
+  href,
+  arrow,
+  at,
+  primary = false,
+  children,
+}: {
+  href: string;
+  arrow: "↓" | "↗";
+  at: number;
+  primary?: boolean;
+  children: ReactNode;
+}) {
+  const nudge = arrow === "↓" ? "group-hover:translate-y-1" : "group-hover:translate-x-1 group-hover:-translate-y-1";
+  const line = primary ? "h-0.5" : "h-px";
+  return (
+    <a
+      href={href}
+      className={`intro-fade group relative inline-flex items-center leading-none focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-orange ${
+        primary
+          ? "gap-[.4em] pb-3 text-[clamp(26px,2.5vw,36px)] font-bold tracking-[-0.045em] text-ink"
+          : "gap-2 pb-2 text-[clamp(17px,1.4vw,20px)] font-medium tracking-[-0.02em] text-ink-2"
+      }`}
+      style={delay(at)}
+    >
+      {children}
+      {primary ? (
+        <span
+          aria-hidden
+          className="grid size-[2.1em] place-items-center rounded-full bg-orange font-mono text-[.55em] leading-none font-medium text-ink transition-transform duration-500 ease-snap group-hover:scale-110"
+        >
+          <span className="transition-transform duration-500 ease-snap group-hover:translate-y-[.3em]">{arrow}</span>
+        </span>
+      ) : (
+        <span aria-hidden className={`font-mono text-muted transition-[translate,color] duration-500 ease-snap group-hover:text-orange ${nudge}`}>
+          {arrow}
+        </span>
+      )}
+      <span aria-hidden className={`intro-line absolute inset-x-0 bottom-0 origin-left ${line} bg-line-2`} style={delay(at + 250)} />
+      <span
+        aria-hidden
+        className={`absolute inset-x-0 bottom-0 origin-left scale-x-0 bg-orange transition-transform duration-600 ease-snap group-hover:scale-x-100 group-focus-visible:scale-x-100 ${line}`}
+      />
+    </a>
   );
 }
 
