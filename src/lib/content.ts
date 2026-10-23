@@ -75,7 +75,6 @@ export const TEAM: TeamMember[] = [
 ];
 
 export const CHANNELS = [
-  { k: "Email", v: "[EMAIL]", href: "#" },
-  { k: "WhatsApp", v: "[TELÉFONO]", href: "#" },
-  { k: "Instagram", v: "[USUARIO]", href: "#" },
+  { k: "Email", v: "dunk.codee@gmail.com", href: "mailto:dunk.codee@gmail.com" },
+  { k: "WhatsApp", v: "+54 9 3442 66-8413", href: "https://wa.me/5493442668413" },
 ];

@@ -117,13 +117,16 @@ function Typed({ text, at }: { text: string; at: number }) {
   );
 }
 
-/** Texto que rueda hacia arriba y lo reemplaza una copia en hover (necesita un padre `group`). */
-function RollText({ children }: { children: ReactNode }) {
+/**
+ * Texto que rueda hacia arriba y lo reemplaza otro en hover (necesita un padre `group`).
+ * Sin `alt` entra una copia del mismo texto; el ancho es el del más largo de los dos.
+ */
+export function RollText({ children, alt = children }: { children: ReactNode; alt?: ReactNode }) {
   return (
-    <span className="relative block overflow-hidden leading-[1.3]">
-      <span className="block transition-transform duration-450 ease-snap group-hover:-translate-y-full">{children}</span>
-      <span aria-hidden className="absolute inset-0 block translate-y-full transition-transform duration-450 ease-snap group-hover:translate-y-0">
-        {children}
+    <span className="grid overflow-hidden leading-[1.3] whitespace-nowrap">
+      <span className="col-start-1 row-start-1 transition-transform duration-450 ease-snap group-hover:-translate-y-full">{children}</span>
+      <span aria-hidden className="col-start-1 row-start-1 translate-y-full transition-transform duration-450 ease-snap group-hover:translate-y-0">
+        {alt}
       </span>
     </span>
   );
