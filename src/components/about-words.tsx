@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef } from "react";
+import { Fragment, useRef } from "react";
 import { prefersReducedMotion, useScrollFrame } from "@/lib/hooks";
+import { at } from "@/lib/motion";
 
-/** Párrafo cuyas palabras se encienden una por una a medida que la sección entra en pantalla. */
+/** Párrafo cuyas palabras entran desde una máscara y se encienden una por una a medida que la sección entra en pantalla. */
 export function AboutWords({ words }: { words: { t: string; accent: boolean }[] }) {
   const ref = useRef<HTMLParagraphElement>(null);
   const lit = useRef(-1);
@@ -28,10 +29,20 @@ export function AboutWords({ words }: { words: { t: string; accent: boolean }[] 
       ref={ref}
       className="m-0 max-w-[1040px] text-[clamp(30px,4.6vw,66px)] leading-[1.08] font-medium tracking-[-0.035em] text-pretty"
     >
+      {/* Cada palabra sube desde atrás de una máscara al entrar (necesita un `InView` arriba). */}
       {words.map((w, i) => (
-        <span key={i} data-w data-accent={w.accent || undefined} className="text-paper transition-colors duration-350">
-          {w.t}{" "}
-        </span>
+        <Fragment key={i}>
+          <span className="-mx-[.06em] -my-[.12em] inline-block overflow-clip px-[.06em] py-[.12em] align-top">
+            <span
+              data-w
+              data-accent={w.accent || undefined}
+              className="in-word inline-block text-paper transition-colors duration-350"
+              style={at(150 + i * 70)}
+            >
+              {w.t}
+            </span>
+          </span>{" "}
+        </Fragment>
       ))}
     </p>
   );

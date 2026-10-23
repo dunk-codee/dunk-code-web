@@ -51,8 +51,7 @@ export const SERVICES = [
   { n: "03", t: "Integraciones y automatización", d: "Conectamos las herramientas que ya usás y automatizamos las tareas repetitivas.", tags: ["APIs", "Pagos", "WhatsApp"] },
 ];
 
-export const ABOUT =
-  "Somos Dunk Code, un estudio de desarrollo formado por dos amigos. Diseñamos y programamos software a medida para negocios que necesitan una herramienta propia.";
+export const ABOUT = "Dos amigos que diseñan y programan software a medida.";
 /** Palabras de ABOUT que se resaltan en naranja al encenderse. */
 export const ABOUT_ACCENT = "software a medida";
 
@@ -66,12 +65,22 @@ export const NAV = [
 export const FILTERS = ["Todos", "Web", "App", "Sistema"] as const;
 export type Filter = (typeof FILTERS)[number];
 
-export type TeamMember = { name: string; role: string; photo?: string };
+export type TeamMember = { name: string; role: string; photo?: string; linkedin?: string };
 
-// Poné las fotos en /public/team y usá `photo: "/team/mateo.jpg"`.
+// Fotos en /public/profiles (WebP, recorte 4:5). Sin `linkedin` no se muestra el link.
 export const TEAM: TeamMember[] = [
-  { name: "Mateo del Valle", role: "[CARGO]" },
-  { name: "[TU NOMBRE]", role: "[CARGO]" },
+  {
+    name: "Mateo del Valle",
+    role: "Analista de Sistemas",
+    photo: "/profiles/mateo-del-valle.webp",
+    linkedin: "https://www.linkedin.com/in/mateo-del-valle-03aa40359/",
+  },
+  {
+    name: "Alex Alvez",
+    role: "Analista de Sistemas",
+    photo: "/profiles/alex-alvez.webp",
+    linkedin: "https://www.linkedin.com/in/alex-alvez-31b980365",
+  },
 ];
 
 export const CHANNELS = [
