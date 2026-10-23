@@ -21,7 +21,7 @@ export function Contact() {
             <span aria-hidden>
               {TITLE.split(" ").map((w, i) => (
                 <Fragment key={i}>
-                  <span className="-mb-[.12em] inline-block overflow-clip pb-[.12em] align-top">
+                  <span className="-mx-[.08em] -my-[.12em] inline-block overflow-clip px-[.08em] py-[.12em] align-top">
                     <span className="in-word inline-block" style={at(120 + i * 90)}>
                       {w}
                     </span>
