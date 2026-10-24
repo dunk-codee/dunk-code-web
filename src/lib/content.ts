@@ -6,10 +6,18 @@ export type Project = {
   type: string;
   year: string;
   desc: string;
-  stack: string[];
   url?: string;
-  /** Capturas en /public/projects; la primera es la portada. */
+  /** Una línea con lo que se resolvió: es lo primero que se lee del caso. */
+  pitch: string;
+  /** Lo que hace el sistema, en pocas palabras (etiquetas del caso). */
+  features: string[];
+  /** Capturas de escritorio en /public/projects; la primera es la portada. Van rotando en la notebook. */
   images?: { src: string; alt: string }[];
+  /**
+   * Captura del hero en un celular (~400×865, proporción de iPhone) para la maqueta; se muestra desde arriba.
+   * Al reemplazar una captura, cambiarle el nombre: el navegador cachea la versión optimizada por URL.
+   */
+  mobile?: { src: string; alt: string };
 };
 
 export const PROJECTS: Project[] = [
@@ -19,8 +27,10 @@ export const PROJECTS: Project[] = [
     type: "Sitio + sistema de gestión",
     year: "2026",
     desc: "Sitio para una hamburguesería con la carta completa y pedidos online para delivery o retiro, incluso programados cuando el local está cerrado. Detrás, un panel propio para el local: pedidos en vivo, venta de mostrador, caja, ventas, gastos y la carta con precios editables.",
-    stack: ["Next.js", "Cloudinary"],
     url: "https://www.donpanchoyburger.com.ar/",
+    pitch: "Pedidos online para delivery o retiro, y un panel propio para manejar el local día a día.",
+    features: ["Pedidos online", "Venta de mostrador", "Caja y ventas", "Carta editable"],
+    mobile: { src: "/projects/donpancho-hero-mobile.webp", alt: "Sitio de Don Pancho & Burger en el celular" },
     images: [
       { src: "/projects/donpancho-hero.webp", alt: "Portada del sitio de Don Pancho & Burger" },
       { src: "/projects/donpancho-menu.webp", alt: "Carta online de Don Pancho & Burger" },
@@ -34,8 +44,10 @@ export const PROJECTS: Project[] = [
     type: "Sitio institucional",
     year: "2026",
     desc: "Sitio para un centro terapéutico interdisciplinario: especialidades, un directorio de profesionales con buscador y página propia para cada uno, turnos directos por WhatsApp y un portal privado para el staff.",
-    stack: ["Next.js"],
     url: "https://www.centroterapeuticointegral.com.ar/",
+    pitch: "Un sitio que presenta a cada profesional y lleva los turnos directo a WhatsApp, con un portal privado para el equipo.",
+    features: ["Directorio con buscador", "Turnos por WhatsApp", "Portal del staff"],
+    mobile: { src: "/projects/cti-hero-mobile.webp", alt: "Sitio del Centro Terapéutico Integral en el celular" },
     images: [
       { src: "/projects/cti-hero.webp", alt: "Portada del sitio del Centro Terapéutico Integral" },
       { src: "/projects/cti-especialidades.webp", alt: "Especialidades del Centro Terapéutico Integral" },
@@ -157,9 +169,6 @@ export const NAV = [
   { id: "demos", label: "Demos" },
   { id: "contacto", label: "Contacto" },
 ] as const;
-
-export const FILTERS = ["Todos", "Web", "App", "Sistema"] as const;
-export type Filter = (typeof FILTERS)[number];
 
 export type TeamMember = { name: string; role: string; photo?: string; linkedin?: string };
 

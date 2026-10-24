@@ -147,6 +147,11 @@
 @keyframes hc-float {
   50% { translate: 0 -5px; }
 }
+/* Barra de la captura activa en los casos de proyectos (projects.tsx): se llena mientras dura. */
+@keyframes shot-fill {
+  from { scale: 0 1; }
+  to { scale: 1 1; }
+}
 @keyframes ball-roll {
   from { transform: rotate(-340deg); }
   to { transform: rotate(0deg); }
@@ -191,6 +196,29 @@
 @keyframes zoom-out {
   from { scale: 1.35; filter: blur(10px) grayscale(1); }
   to { scale: 1; filter: none; }
+}
+/* Maqueta de proyectos: la tapa de la notebook se abre desde la bisagra, las pantallas se encienden
+   como una tele (una línea de luz que se abre) y el celular sube, se pasa apenas y se acomoda. */
+@keyframes base-in {
+  from { opacity: 0; transform: translateY(10px) scaleX(0.94); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes lid-open {
+  0% { opacity: 0; transform: perspective(1600px) rotateX(-88deg); }
+  12% { opacity: 1; }
+  75% { transform: perspective(1600px) rotateX(3deg); }
+  100% { transform: perspective(1600px) rotateX(0deg); }
+}
+@keyframes screen-on {
+  0% { clip-path: inset(49.5% 50% 49.5% 50%); }
+  35% { clip-path: inset(49.5% 0 49.5% 0); }
+  100% { clip-path: inset(0); }
+}
+@keyframes phone-in {
+  0% { opacity: 0; transform: translateY(70px) rotate(9deg); }
+  60% { opacity: 1; transform: translateY(-8px) rotate(-1.5deg); }
+  82% { transform: translateY(2px) rotate(0.4deg); }
+  100% { opacity: 1; transform: none; }
 }
 @keyframes burst-in {
   from { clip-path: circle(0 at 50% 50%); scale: 0.7; }
@@ -381,7 +409,22 @@
   [data-scope] .in-zoom {
     animation: zoom-out 1.8s var(--ease-snap) backwards paused;
   }
-  [data-scope][data-in] :is(.in-word, .in-rise, .in-line, .in-item, .in-dot, .in-spark, .in-burst, .in-clip, .in-wipe, .in-zoom) {
+  /* Maqueta de proyectos (projects.tsx). */
+  /* Base de la notebook: aparece rápido y completa antes de que se abra la tapa. */
+  [data-scope] .in-base {
+    animation: base-in 0.4s var(--ease-snap) backwards paused;
+  }
+  [data-scope] .in-lid {
+    transform-origin: bottom;
+    animation: lid-open 1.3s cubic-bezier(0.2, 0.8, 0.25, 1) backwards paused;
+  }
+  [data-scope] .in-screen {
+    animation: screen-on 0.9s cubic-bezier(0.65, 0, 0.35, 1) backwards paused;
+  }
+  [data-scope] .in-phone {
+    animation: phone-in 1.1s cubic-bezier(0.25, 0.8, 0.3, 1) backwards paused;
+  }
+  [data-scope][data-in] :is(.in-word, .in-rise, .in-line, .in-item, .in-dot, .in-spark, .in-burst, .in-clip, .in-wipe, .in-zoom, .in-base, .in-lid, .in-screen, .in-phone) {
     animation-play-state: running;
   }
 }
