@@ -55,7 +55,7 @@ export function Demos() {
         <ProjectModal
           key={sel}
           project={{ ...demo, meta: `Demo · ${demo.rubro}`, tags: demo.features }}
-          urlLabel="Ver demo"
+          urlLabel="Ver sitio en vivo"
           nextLabel="Siguiente demo"
           onClose={() => setSel(null)}
           onNext={DEMOS.length > 1 ? () => setSel((s) => ((s ?? 0) + 1) % DEMOS.length) : undefined}
@@ -110,14 +110,14 @@ function DemoCard({ demo: d, featured, onOpen }: { demo: Demo; featured: boolean
           </p>
         )}
         <div className="mt-auto flex flex-wrap gap-2.5 pt-3">
-          <a
-            href={d.url}
-            target="_blank"
-            rel="noreferrer"
+          {/* Primero las capturas: el link al sitio en vivo está dentro del modal. */}
+          <button
+            type="button"
+            onClick={onOpen}
             className="flex h-11 items-center rounded-full bg-ink px-5 text-[15px] font-medium text-paper hover:bg-ink-2"
           >
-            Ver demo ↗
-          </a>
+            Ver demo
+          </button>
           <button
             type="button"
             onClick={() => wantOne(d)}

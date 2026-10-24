@@ -107,17 +107,8 @@ export function ProjectModal({
             <h3 id="project-title" className="m-0 text-[clamp(36px,5vw,64px)] leading-[.95] font-bold tracking-[-0.05em]">
               {project.name}
             </h3>
-          </div>
-          <div className="flex flex-col gap-6">
-            <p className="m-0 text-lg leading-[1.55] text-pretty text-ink-2">{project.desc}</p>
-            <div className="flex flex-wrap gap-2">
-              {project.tags.map((st) => (
-                <span key={st} className="rounded-full bg-sand px-3 py-2 font-mono text-xs font-medium text-ink-2">
-                  {st}
-                </span>
-              ))}
-            </div>
-            <div className="flex flex-wrap gap-2.5">
+            {/* Botones debajo del título para que se vean sin scrollear el modal. */}
+            <div className="mt-3 flex flex-wrap gap-2.5">
               <a
                 href={project.url ?? "#"}
                 target={project.url ? "_blank" : undefined}
@@ -137,6 +128,16 @@ export function ProjectModal({
                   {nextLabel} →
                 </button>
               )}
+            </div>
+          </div>
+          <div className="flex flex-col gap-6">
+            <p className="m-0 text-lg leading-[1.55] text-pretty text-ink-2">{project.desc}</p>
+            <div className="flex flex-wrap gap-2">
+              {project.tags.map((st) => (
+                <span key={st} className="rounded-full bg-sand px-3 py-2 font-mono text-xs font-medium text-ink-2">
+                  {st}
+                </span>
+              ))}
             </div>
           </div>
         </div>
