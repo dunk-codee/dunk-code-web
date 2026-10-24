@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState, useTransition, type CSSProperties, type ReactNode } from "react";
+import { useEffect, useRef, useState, useTransition, type ReactNode } from "react";
 import { sendContact } from "@/app/actions";
 import { TIPOS, validateContact, type ContactErrors, type ContactInput } from "@/lib/contact-schema";
 import { at } from "@/lib/motion";
 import { Ball } from "./ball";
+import { Burst } from "./burst";
 import { RollText } from "./hero";
 
 const EMPTY: ContactInput = { name: "", email: "", tipo: "Sitio web", msg: "" };
@@ -224,39 +225,6 @@ function Line({ at: ms, error, children }: { at: number; error: boolean; childre
         aria-hidden
         className="absolute inset-x-0 bottom-0 h-px origin-left scale-x-0 bg-paper transition-transform duration-500 ease-snap peer-focus:scale-x-100"
       />
-    </span>
-  );
-}
-
-const SPARKS = [0, 45, 90, 135, 180, 225, 270, 315];
-
-/**
- * Aparición tipo explosión: un punto naranja late, estalla en chispas
- * y el botón se abre en círculo desde el centro. `w`/`h` = tamaño aproximado del botón,
- * para que las chispas salgan por fuera del borde.
- */
-function Burst({ at: ms, w, h, className = "", children }: { at: number; w: number; h: number; className?: string; children: ReactNode }) {
-  return (
-    <span className={`relative inline-flex ${className}`}>
-      <span className="in-burst inline-flex" style={at(ms + 160)}>
-        {children}
-      </span>
-      <span aria-hidden className="in-dot pointer-events-none absolute top-1/2 left-1/2 -mt-1.5 -ml-1.5 hidden size-3 rounded-full bg-orange" style={at(ms)} />
-      {SPARKS.map((a, i) => {
-        const r = (a * Math.PI) / 180;
-        const style = {
-          "--x": `${Math.round(Math.cos(r) * (w / 2 + 16))}px`,
-          "--y": `${Math.round(Math.sin(r) * (h / 2 + 14))}px`,
-        } as CSSProperties;
-        return (
-          <span
-            key={a}
-            aria-hidden
-            className={`in-spark pointer-events-none absolute top-1/2 left-1/2 -mt-[3px] -ml-[3px] hidden size-1.5 rounded-full ${i % 2 ? "bg-paper" : "bg-orange"}`}
-            style={at(ms + 200, style)}
-          />
-        );
-      })}
     </span>
   );
 }

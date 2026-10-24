@@ -141,9 +141,9 @@ export const DEMOS: Demo[] = [
 ];
 
 export const SERVICES = [
-  { n: "01", t: "Sitios y web apps", d: "Sitios rápidos y autoadministrables, y web apps que tus clientes usan desde cualquier dispositivo.", tags: ["Next.js", "React", "CMS"] },
+  { n: "01", t: "Sitios y web apps", d: "Sitios rápidos y autoadministrables, y web apps que tus clientes usan desde cualquier dispositivo.", tags: ["Fáciles de editar", "Pensadas para celular", "Carga rápida"] },
   { n: "02", t: "Software a medida", d: "Sistemas internos, paneles y herramientas pensadas para la forma en que trabaja tu negocio.", tags: ["Gestión", "Paneles", "Reportes"] },
-  { n: "03", t: "Integraciones y automatización", d: "Conectamos las herramientas que ya usás y automatizamos las tareas repetitivas.", tags: ["APIs", "Pagos", "WhatsApp"] },
+  { n: "03", t: "Integraciones y automatización", d: "Conectamos las herramientas que ya usás y automatizamos las tareas repetitivas.", tags: ["Mercado Pago", "WhatsApp", "Facturación"] },
 ];
 
 export const ABOUT = "Dos amigos que convierten ideas en herramientas.";

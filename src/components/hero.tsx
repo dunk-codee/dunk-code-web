@@ -25,7 +25,13 @@ export function Hero() {
   useEffect(() => {
     const [drop, squash, roll] = [dropRef.current, squashRef.current, rollRef.current];
     if (!drop || !squash || !roll || prefersReducedMotion() || !document.documentElement.hasAttribute("data-intro-seen")) return;
-    const anim = gravityDrop(drop.getBoundingClientRect().bottom + 20);
+    // Si el navegador restauró el scroll y la pelota no está a la vista, aparece quieta en su lugar.
+    const { bottom } = drop.getBoundingClientRect();
+    if (bottom <= 0 || bottom > innerHeight) {
+      drop.style.opacity = "1";
+      return;
+    }
+    const anim = gravityDrop(bottom + 20);
     const opts: KeyframeAnimationOptions = { duration: anim.duration, delay: Math.max(0, 650 - performance.now()), fill: "backwards" };
     const anims = [
       drop.animate(anim.move, opts),

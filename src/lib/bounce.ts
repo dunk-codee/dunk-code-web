@@ -9,7 +9,10 @@ export type Arc = { dur: number; h: number; x0: number; x1: number; y0?: number;
  * y giro proporcional al avance (redondeado a media vuelta: el dibujo es simétrico y no salta al terminar).
  */
 export function bounce(arcs: Arc[], lead: number, impacts: number[]) {
+  // Duración inválida (NaN por una altura negativa, etc.): sin animación. Sin este corte el muestreo
+  // de abajo nunca termina y llena la memoria hasta que el navegador mata la pestaña.
   const total = lead + arcs.reduce((n, a) => n + a.dur, 0);
+  if (!Number.isFinite(total) || total <= 0) return { move: [], shape: [], turn: [], duration: 0 };
   const X0 = arcs[0].x0;
   const X1 = arcs[0].x1;
   const spin = Math.round(((X1 - X0) * 1.1) / 180) * 180;
@@ -23,7 +26,7 @@ export function bounce(arcs: Arc[], lead: number, impacts: number[]) {
   const move: Keyframe[] = [];
   const shape: Keyframe[] = [];
   const turn: Keyframe[] = [];
-  for (let ms = 0; ; ms = Math.min(ms + 1000 / 60, total)) {
+  for (let ms = 0, n = 0; n < 600; ms = Math.min(ms + 1000 / 60, total), n++) {
     let x = X0;
     let y = 0;
     let stretch = 0;
@@ -53,6 +56,7 @@ export function bounce(arcs: Arc[], lead: number, impacts: number[]) {
  * de la velocidad (la altura baja con su cuadrado) hasta que es menor a 1.5px.
  */
 export function gravityDrop(height: number, g = 3200, restitution = 0.52) {
+  height = Math.max(40, height || 0);
   const air = (h: number) => Math.sqrt((2 * h) / g) * 1000; // ms para caer h px desde el reposo
   const arcs: Arc[] = [{ dur: air(height), h: height, x0: 0, x1: 0, fall: true }];
   const impacts = [0.32];
