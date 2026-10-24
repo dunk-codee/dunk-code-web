@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { JetBrains_Mono, Space_Grotesk } from "next/font/google";
+import { INTRO_SEEN_SCRIPT } from "@/components/intro";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -26,7 +27,11 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="es" className={`${spaceGrotesk.variable} ${jetbrainsMono.variable}`}>
+    // suppressHydrationWarning: el script de la intro marca el <html> antes de hidratar.
+    <html lang="es" className={`${spaceGrotesk.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: INTRO_SEEN_SCRIPT }} />
+      </head>
       <body>{children}</body>
     </html>
   );

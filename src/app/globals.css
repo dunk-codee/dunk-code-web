@@ -233,6 +233,17 @@
   .intro-layer {
     display: flex;
   }
+  /* Intro ya vista en esta sesión (INTRO_SEEN_SCRIPT, en el <head> de layout.tsx): sin telón ni tiro. */
+  html[data-intro-seen] :is(.intro, .intro-layer) {
+    display: none;
+  }
+  /* La pelota del título la hace caer JS (hero.tsx, con física): oculta hasta entonces. */
+  html[data-intro-seen] [data-hero-ball] :is(.ball-drop, .ball-roll) {
+    animation: none;
+  }
+  html[data-intro-seen] [data-hero-ball] .ball-drop {
+    opacity: 0;
+  }
   .intro-hoop {
     animation:
       hero-fade 0.5s var(--ease-snap) backwards,
