@@ -3,6 +3,7 @@
 import { Fragment, useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 import { gravityDrop } from "@/lib/bounce";
 import { Ball } from "./ball";
+import { HeroCourt } from "./hero-court";
 import { afterIntro } from "./intro";
 import { prefersReducedMotion, useScrollFrame } from "@/lib/hooks";
 
@@ -17,6 +18,7 @@ export function Hero() {
   const dropRef = useRef<HTMLSpanElement>(null);
   const squashRef = useRef<HTMLSpanElement>(null);
   const rollRef = useRef<HTMLSpanElement>(null);
+  const courtRef = useRef<HTMLDivElement>(null);
 
   // Sin intro (ya vista en la sesión), la pelota del título cae con física real desde arriba de la pantalla,
   // en el mismo momento que tenía el `ball-drop` CSS (que en ese caso queda desactivado en globals.css).
@@ -35,14 +37,18 @@ export function Hero() {
   }, []);
 
   useScrollFrame(() => {
-    if (ballRef.current && !prefersReducedMotion()) ballRef.current.style.transform = `rotate(${scrollY * 0.2}deg)`;
+    if (prefersReducedMotion()) return;
+    if (ballRef.current) ballRef.current.style.transform = `rotate(${scrollY * 0.2}deg)`;
+    // La cancha baja más lento que la página: parallax leve.
+    if (courtRef.current && scrollY < innerHeight * 1.5) courtRef.current.style.transform = `translateY(${scrollY * 0.18}px)`;
   });
 
   return (
     <section
       id="inicio"
-      className="relative z-1 box-border flex min-h-svh flex-col justify-between gap-12 overflow-clip px-gutter pt-[clamp(110px,15vh,160px)] pb-[clamp(28px,5vh,48px)]"
+      className="relative isolate z-1 box-border flex min-h-svh flex-col justify-between gap-12 overflow-clip px-gutter pt-[clamp(110px,15vh,160px)] pb-[clamp(28px,5vh,48px)]"
     >
+      <HeroCourt ref={courtRef} />
       <div className="flex flex-wrap justify-between gap-4 font-mono text-[13px] leading-4.5 font-medium tracking-[.04em] text-muted uppercase">
         <span>
           <Typed text="// software a medida" at={300} />

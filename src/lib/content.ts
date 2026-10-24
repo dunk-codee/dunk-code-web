@@ -146,9 +146,9 @@ export const SERVICES = [
   { n: "03", t: "Integraciones y automatización", d: "Conectamos las herramientas que ya usás y automatizamos las tareas repetitivas.", tags: ["APIs", "Pagos", "WhatsApp"] },
 ];
 
-export const ABOUT = "Dos amigos que diseñan y programan software a medida.";
+export const ABOUT = "Dos amigos que convierten ideas en herramientas.";
 /** Palabras de ABOUT que se resaltan en naranja al encenderse. */
-export const ABOUT_ACCENT = "software a medida";
+export const ABOUT_ACCENT = "ideas en herramientas";
 
 export const NAV = [
   { id: "nosotros", label: "Nosotros" },

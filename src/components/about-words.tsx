@@ -15,7 +15,8 @@ export function AboutWords({ words }: { words: { t: string; accent: boolean }[] 
     const vh = innerHeight;
     const progress = prefersReducedMotion()
       ? 1
-      : Math.min(1, Math.max(0, (vh * 0.78 - p.getBoundingClientRect().top) / (vh * 0.6)));
+      : // Termina de encenderse con el título al 40% de la pantalla: al llegar desde el link "Nosotros" ya está completo.
+        Math.min(1, Math.max(0, (vh * 0.85 - p.getBoundingClientRect().top) / (vh * 0.45)));
     const n = Math.round(progress * words.length);
     if (n === lit.current) return;
     lit.current = n;
