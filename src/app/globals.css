@@ -126,10 +126,26 @@
   96% { transform: translateY(0) scale(1.05, 0.95); }
   100% { transform: none; }
 }
-/* Líneas de la cancha del hero (hero-court.tsx): se trazan con pathLength=1. */
-@keyframes court-draw {
+/* Animación de la derecha del hero (hero-connect.tsx): trazos, puntos, íconos que salen y flotan. */
+@keyframes hc-draw {
   from { stroke-dashoffset: 1; }
   to { stroke-dashoffset: 0; }
+}
+@keyframes hc-pop {
+  0% { scale: 0; }
+  70% { scale: 1.4; }
+  100% { scale: 1; }
+}
+@keyframes hc-emerge {
+  from { translate: var(--dx) var(--dy); scale: 0.2; opacity: 0; }
+  to { translate: 0 0; scale: 1; opacity: 1; }
+}
+@keyframes hc-drop {
+  from { scale: 1 0; }
+  to { scale: 1 1; }
+}
+@keyframes hc-float {
+  50% { translate: 0 -5px; }
 }
 @keyframes ball-roll {
   from { transform: rotate(-340deg); }
@@ -295,7 +311,31 @@
   .intro-pill {
     animation: pill-in 0.9s var(--ease-snap) backwards;
   }
-  /* Línea de los botones subrayados del hero. */
+  .hc-draw {
+    stroke-dasharray: 1;
+    animation: hc-draw 0.9s cubic-bezier(0.65, 0, 0.35, 1) backwards;
+  }
+  .hc-fade {
+    animation: fade 0.6s backwards;
+  }
+  .hc-pop {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: hc-pop 0.45s cubic-bezier(0.3, 1.5, 0.5, 1) backwards;
+  }
+  /* Franjas del toldo: caen desde la cornisa. */
+  .hc-drop {
+    transform-box: fill-box;
+    transform-origin: top;
+    animation: hc-drop 0.5s var(--ease-snap) backwards;
+  }
+  .hc-emerge {
+    animation: hc-emerge 0.8s var(--ease-snap) backwards;
+  }
+  .hc-float {
+    animation: hc-float 4.2s ease-in-out infinite;
+  }
+  /* Línea de los botones subrayados del hero (UnderLink). */
   .intro-line {
     animation: line-draw 1.1s cubic-bezier(0.65, 0, 0.2, 1) backwards;
   }
@@ -304,10 +344,6 @@
   }
   .ball-roll {
     animation: ball-roll 1.5s cubic-bezier(0.2, 0.7, 0.3, 1) backwards;
-  }
-  .court-line {
-    stroke-dasharray: 1;
-    animation: court-draw 1.8s cubic-bezier(0.65, 0, 0.35, 1) backwards;
   }
 
   /* Pausadas en su primer cuadro hasta que el InView marca `data-in`. */
@@ -347,5 +383,48 @@
   }
   [data-scope][data-in] :is(.in-word, .in-rise, .in-line, .in-item, .in-dot, .in-spark, .in-burst, .in-clip, .in-wipe, .in-zoom) {
     animation-play-state: running;
+  }
+}
+
+/*
+ * Pantallas chicas: las mismas entradas sin `filter: blur`. En celulares la densidad de píxeles (2x–3x)
+ * multiplica el costo del desenfoque justo en la carga, cuando se animan decenas de letras a la vez.
+ * Mismos movimientos, sin desenfoque; en escritorio no cambia nada.
+ */
+@keyframes char-in-lite {
+  from { opacity: 0; transform: translateY(0.3em) rotateX(-80deg); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes word-in-lite {
+  from { opacity: 0; transform: translateY(0.6em); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes word-up-lite {
+  from { transform: translateY(105%) rotate(6deg); }
+  to { transform: none; }
+}
+@keyframes item-in-lite {
+  from { opacity: 0; transform: translateX(48px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes zoom-out-lite {
+  from { scale: 1.35; }
+  to { scale: 1; }
+}
+@media (prefers-reduced-motion: no-preference) and (max-width: 47.5rem) {
+  .intro-char {
+    animation-name: char-in-lite;
+  }
+  .intro-word {
+    animation-name: word-in-lite;
+  }
+  [data-scope] .in-word {
+    animation-name: word-up-lite;
+  }
+  [data-scope] .in-item {
+    animation-name: item-in-lite;
+  }
+  [data-scope] .in-zoom {
+    animation-name: zoom-out-lite;
   }
 }

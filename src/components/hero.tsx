@@ -3,7 +3,7 @@
 import { Fragment, useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 import { gravityDrop } from "@/lib/bounce";
 import { Ball } from "./ball";
-import { HeroCourt } from "./hero-court";
+import { HeroConnect } from "./hero-connect";
 import { afterIntro } from "./intro";
 import { prefersReducedMotion, useScrollFrame } from "@/lib/hooks";
 
@@ -14,11 +14,10 @@ const LEAD =
 const delay = (ms: number): CSSProperties => ({ animationDelay: afterIntro(ms) });
 
 export function Hero() {
-  const ballRef = useRef<HTMLSpanElement>(null);
+  const spinRef = useRef<HTMLSpanElement>(null);
   const dropRef = useRef<HTMLSpanElement>(null);
   const squashRef = useRef<HTMLSpanElement>(null);
   const rollRef = useRef<HTMLSpanElement>(null);
-  const courtRef = useRef<HTMLDivElement>(null);
 
   // Sin intro (ya vista en la sesión), la pelota del título cae con física real desde arriba de la pantalla,
   // en el mismo momento que tenía el `ball-drop` CSS (que en ese caso queda desactivado en globals.css).
@@ -44,9 +43,8 @@ export function Hero() {
 
   useScrollFrame(() => {
     if (prefersReducedMotion()) return;
-    if (ballRef.current) ballRef.current.style.transform = `rotate(${scrollY * 0.2}deg)`;
-    // La cancha baja más lento que la página: parallax leve.
-    if (courtRef.current && scrollY < innerHeight * 1.5) courtRef.current.style.transform = `translateY(${scrollY * 0.18}px)`;
+    // El giro por scroll va en el dibujo, no en el contenedor: si no, con la página scrolleada la caída sale torcida.
+    if (spinRef.current) spinRef.current.style.transform = `rotate(${scrollY * 0.2}deg)`;
   });
 
   return (
@@ -54,7 +52,6 @@ export function Hero() {
       id="inicio"
       className="relative isolate z-1 box-border flex min-h-svh flex-col justify-between gap-12 overflow-clip px-gutter pt-[clamp(110px,15vh,160px)] pb-[clamp(28px,5vh,48px)]"
     >
-      <HeroCourt ref={courtRef} />
       <div className="flex flex-wrap justify-between gap-4 font-mono text-[13px] leading-4.5 font-medium tracking-[.04em] text-muted uppercase">
         <span>
           <Typed text="// software a medida" at={300} />
@@ -72,17 +69,20 @@ export function Hero() {
         </span>
         <span aria-hidden className="block pb-[.06em] whitespace-nowrap perspective-[900px]">
           <Chars text="a tu medida" at={200} />
-          <span ref={ballRef} data-hero-ball className="pointer-events-none relative z-3 ml-[.045em] inline-block size-[.19em] will-change-transform">
+          <span data-hero-ball className="pointer-events-none relative z-3 ml-[.045em] inline-block size-[.19em]">
             <span ref={dropRef} className="ball-drop block size-full origin-bottom" style={delay(650)}>
               <span ref={squashRef} className="block size-full origin-bottom">
                 <span ref={rollRef} className="ball-roll block size-full" style={delay(650)}>
-                  <Ball />
+                  <span ref={spinRef} className="block size-full will-change-transform">
+                    <Ball />
+                  </span>
                 </span>
               </span>
             </span>
           </span>
         </span>
       </h1>
+      <HeroConnect />
 
       <div className="flex flex-wrap items-end justify-between gap-8">
         <div className="flex max-w-120 flex-col gap-6.5">

@@ -148,8 +148,11 @@ export function SiteHeader() {
     <>
       <header ref={header} className="group/h pointer-events-none fixed inset-x-0 top-0 z-50 px-gutter pt-4 pb-8">
         {/* Degradé del color de la sección de abajo, para que se lea sin una caja. */}
-        <span ref={fade} aria-hidden className="absolute inset-0 -z-10" />
-        <nav className="pointer-events-auto flex items-center justify-between gap-4 text-ink transition-colors duration-500 group-data-dark/h:text-paper">
+        <span ref={fade} aria-hidden className={`absolute inset-0 -z-10 transition-opacity duration-300 ${menuOpen ? "opacity-0" : ""}`} />
+        {/* Con el menú mobile abierto (fondo tinta) el logo y el ícono van claros. */}
+        <nav
+          className={`pointer-events-auto flex items-center justify-between gap-4 transition-colors duration-500 ${menuOpen ? "text-paper" : "text-ink group-data-dark/h:text-paper"}`}
+        >
           <a
             href="#inicio"
             onClick={() => go("")}
@@ -170,15 +173,18 @@ export function SiteHeader() {
                 data-nav={id}
                 onClick={() => go(id)}
                 aria-current={active === id ? "location" : undefined}
-                className={`intro-header group relative px-4 pt-2 pb-5 font-mono text-[15px] leading-none font-medium transition-opacity duration-300 ${active === id ? "opacity-100" : "opacity-55 hover:opacity-100"}`}
+                className="intro-header group relative px-4 pt-2 pb-5 font-mono text-[15px] leading-none font-medium"
                 style={enter(90 + i * 70)}
               >
-                {label}
-                {/* Línea de hover: se dibuja de izquierda a derecha. */}
-                <span
-                  aria-hidden
-                  className="absolute inset-x-4 bottom-3 h-px origin-left scale-x-0 bg-current transition-transform duration-400 ease-snap group-hover:scale-x-100"
-                />
+                {/* El gris va adentro: la animación de entrada (que lleva la opacidad a 1) es del <a>, así entra gris de una. */}
+                <span className={`transition-opacity duration-300 ${active === id ? "opacity-100" : "opacity-55 group-hover:opacity-100"}`}>
+                  {label}
+                  {/* Línea de hover: se dibuja de izquierda a derecha. */}
+                  <span
+                    aria-hidden
+                    className="absolute inset-x-4 bottom-3 h-px origin-left scale-x-0 bg-current transition-transform duration-400 ease-snap group-hover:scale-x-100"
+                  />
+                </span>
               </a>
             ))}
             <span
@@ -212,10 +218,19 @@ export function SiteHeader() {
             onClick={() => setMenuOpen((o) => !o)}
             aria-expanded={menuOpen}
             aria-controls="mobile-menu"
-            className="intro-header h-11 rounded-full bg-ink px-[18px] font-mono text-[13px] font-medium text-paper group-data-dark/h:bg-paper group-data-dark/h:text-ink md:hidden"
+            aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
+            className="intro-header relative -mr-2 grid size-11 place-items-center md:hidden"
             style={enter(120)}
           >
-            {menuOpen ? "Cerrar" : "Menú"}
+            {/* Dos trazos (el de abajo más corto) que se cruzan en una X al abrir. */}
+            <span
+              aria-hidden
+              className={`absolute right-2 h-0.5 rounded-full bg-current transition-[translate,rotate,width] duration-450 ease-snap ${menuOpen ? "w-7 translate-y-0 rotate-45" : "w-7 -translate-y-[5px]"}`}
+            />
+            <span
+              aria-hidden
+              className={`absolute right-2 h-0.5 rounded-full bg-current transition-[translate,rotate,width] duration-450 ease-snap ${menuOpen ? "w-7 translate-y-0 -rotate-45" : "w-[18px] translate-y-[5px]"}`}
+            />
           </button>
         </nav>
       </header>

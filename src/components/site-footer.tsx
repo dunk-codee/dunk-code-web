@@ -12,12 +12,13 @@ export function SiteFooter() {
         <FooterBall />
         <span className="font-mono text-[.9em] font-normal tracking-[-0.07em]">code</span>
       </div>
-      <div className="flex flex-wrap items-center justify-between gap-4 border-t border-ink-2 pt-5 font-mono text-xs font-medium text-subtle">
-        <span>
+      {/* Tres columnas en escritorio (links al centro, sin cortarse); apilado en mobile, con los links en grilla pareja. */}
+      <div className="flex flex-col gap-5 border-t border-ink-2 pt-5 font-mono text-xs font-medium text-subtle lg:grid lg:grid-cols-[1fr_auto_1fr] lg:items-center lg:gap-6">
+        <span className="order-2 lg:order-none">
           © 2026 Dunk Code <span className="ml-2">{"// software a medida"}</span>
         </span>
-        <nav aria-label="Secciones">
-          <ul className="m-0 flex list-none flex-wrap gap-x-6 gap-y-2 p-0">
+        <nav aria-label="Secciones" className="order-1 lg:order-none">
+          <ul className="m-0 grid list-none grid-cols-3 gap-x-6 gap-y-3 p-0 sm:flex sm:flex-nowrap">
             {NAV.map(({ id, label }) => (
               <li key={id}>
                 <a href={`#${id}`} className="text-paper transition-colors duration-250 hover:text-orange">
@@ -27,7 +28,7 @@ export function SiteFooter() {
             ))}
           </ul>
         </nav>
-        <a href="#inicio" className="text-paper hover:text-orange">
+        <a href="#inicio" className="order-3 text-paper hover:text-orange lg:order-none lg:justify-self-end">
           Volver arriba ↑
         </a>
       </div>
