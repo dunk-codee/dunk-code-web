@@ -21,6 +21,23 @@ export function ContactForm() {
   const [pending, startTransition] = useTransition();
   const tipoList = useRef<HTMLDivElement>(null);
   const tipoBar = useRef<HTMLSpanElement>(null);
+  const nameRef = useRef<HTMLInputElement>(null);
+  const prefilled = useRef("");
+
+  // "Quiero uno así" en las demos precarga el pedido; no pisa un mensaje que la persona ya escribió.
+  useEffect(() => {
+    const onPrefill = (e: Event) => {
+      const { tipo, msg } = (e as CustomEvent<Pick<ContactInput, "tipo" | "msg">>).detail;
+      const prev = prefilled.current;
+      prefilled.current = msg;
+      setSent(false);
+      setErrors({});
+      setForm((f) => ({ ...f, tipo, msg: !f.msg.trim() || f.msg === prev ? msg : f.msg }));
+      requestAnimationFrame(() => nameRef.current?.focus({ preventScroll: true }));
+    };
+    addEventListener("contact:prefill", onPrefill);
+    return () => removeEventListener("contact:prefill", onPrefill);
+  }, []);
 
   // Lleva la barra naranja debajo de la opción elegida (con offsets: no los afectan las animaciones de entrada).
   useEffect(() => {
@@ -87,6 +104,7 @@ export function ContactForm() {
         <span className="in-rise label-mono text-subtle" style={at(T.name)}>Nombre</span>
         <Line at={T.name} error={!!errors.name}>
           <input
+            ref={nameRef}
             type="text"
             name="name"
             autoComplete="name"

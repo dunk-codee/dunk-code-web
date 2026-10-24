@@ -145,7 +145,7 @@ export function Projects({ view = "list" }: { view?: ProjectView }) {
       {sel !== null && (
         <ProjectModal
           key={sel}
-          project={PROJECTS[sel]}
+          project={{ ...PROJECTS[sel], meta: `${PROJECTS[sel].type} · ${PROJECTS[sel].year}`, tags: PROJECTS[sel].stack }}
           onClose={() => setSel(null)}
           onNext={PROJECTS.length > 1 ? () => setSel((s) => ((s ?? 0) + 1) % PROJECTS.length) : undefined}
         />

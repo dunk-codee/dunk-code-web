@@ -1,5 +1,6 @@
 import { About } from "@/components/about";
 import { Contact } from "@/components/contact";
+import { Demos } from "@/components/demos";
 import { Hero } from "@/components/hero";
 import { Intro } from "@/components/intro";
 import { Projects } from "@/components/projects";
@@ -18,6 +19,7 @@ export default function Home() {
         <About />
         <Services />
         <Projects view="list" />
+        <Demos />
         <Contact />
       </main>
       <SiteFooter />

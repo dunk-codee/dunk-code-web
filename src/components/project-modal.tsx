@@ -1,12 +1,36 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
-import type { Project } from "@/lib/content";
 import { useBodyLock, useEscape } from "@/lib/hooks";
 
-export function ProjectModal({ project, onClose, onNext }: { project: Project; onClose: () => void; onNext?: () => void }) {
+/** Lo que muestra el modal; lo usan tanto los proyectos como las demos. */
+export type ModalItem = {
+  name: string;
+  meta: string;
+  desc: string;
+  tags: string[];
+  url?: string;
+  images?: { src: string; alt: string }[];
+};
+
+export function ProjectModal({
+  project,
+  onClose,
+  onNext,
+  nextLabel = "Siguiente proyecto",
+  urlLabel = "Visitar sitio",
+  children,
+}: {
+  project: ModalItem;
+  onClose: () => void;
+  onNext?: () => void;
+  nextLabel?: string;
+  urlLabel?: string;
+  /** Acciones extra al lado de los botones. */
+  children?: ReactNode;
+}) {
   const closeRef = useRef<HTMLButtonElement>(null);
   const images = project.images ?? [];
   const [shot, setShot] = useState(0);
@@ -78,7 +102,7 @@ export function ProjectModal({ project, onClose, onNext }: { project: Project; o
         <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,280px),1fr))] gap-x-12 gap-y-8 p-[clamp(24px,4vw,48px)]">
           <div className="flex flex-col gap-3.5">
             <span className="eyebrow text-orange-deep">
-              {project.type} · {project.year}
+              {project.meta}
             </span>
             <h3 id="project-title" className="m-0 text-[clamp(36px,5vw,64px)] leading-[.95] font-bold tracking-[-0.05em]">
               {project.name}
@@ -87,7 +111,7 @@ export function ProjectModal({ project, onClose, onNext }: { project: Project; o
           <div className="flex flex-col gap-6">
             <p className="m-0 text-lg leading-[1.55] text-pretty text-ink-2">{project.desc}</p>
             <div className="flex flex-wrap gap-2">
-              {project.stack.map((st) => (
+              {project.tags.map((st) => (
                 <span key={st} className="rounded-full bg-sand px-3 py-2 font-mono text-xs font-medium text-ink-2">
                   {st}
                 </span>
@@ -101,15 +125,16 @@ export function ProjectModal({ project, onClose, onNext }: { project: Project; o
                 aria-disabled={!project.url}
                 className="flex h-12 items-center rounded-full bg-ink px-[22px] text-[15px] font-medium text-paper hover:bg-ink-2 aria-disabled:pointer-events-none aria-disabled:opacity-60"
               >
-                Visitar sitio ↗
+                {urlLabel} ↗
               </a>
+              {children}
               {onNext && (
                 <button
                   type="button"
                   onClick={onNext}
                   className="h-12 rounded-full border border-ink px-[22px] text-[15px] font-medium text-ink transition-colors hover:bg-ink hover:text-paper"
                 >
-                  Siguiente proyecto →
+                  {nextLabel} →
                 </button>
               )}
             </div>

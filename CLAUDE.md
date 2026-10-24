@@ -40,13 +40,15 @@ src/
     hooks.ts           # hooks de cliente compartidos
 ```
 
-Orden de la página (`page.tsx`): `Intro` → `SiteHeader` → `Hero` → `About` (#nosotros) → `Services` (#servicios) → `Projects` (#proyectos) → `Contact` (#contacto) → `SiteFooter` + `RevealObserver`.
+Orden de la página (`page.tsx`): `Intro` → `SiteHeader` → `Hero` → `About` (#nosotros) → `Services` (#servicios) → `Projects` (#proyectos) → `Demos` (#demos) → `Contact` (#contacto) → `SiteFooter` + `RevealObserver`.
 
 Los ids de sección deben coincidir con `NAV` en `lib/content.ts` (el header calcula la sección activa con ellos).
 
 ## Contenido
 
 Todo el texto/datos de proyectos, servicios, equipo y canales vive en `src/lib/content.ts`. Para cambiar contenido, editar ahí, no en los componentes.
+
+`DEMOS` son sitios de muestra por rubro (publicados en Vercel), **no clientes**: en la web siempre llevan la etiqueta "Demo" y no se mezclan con `PROJECTS`. Capturas en `/public/demos/` (1920×960 WebP). `also` lista otros rubros a los que se adapta el mismo modelo.
 
 Pendientes de completar (placeholders): los `url` de `PROJECTS` (sin `url`, el botón "Visitar sitio" queda deshabilitado). Las capturas de proyectos son placeholders con rayas (`stripes-light`).
 
@@ -87,7 +89,10 @@ Fotos del equipo: `/public/profiles/` en WebP, recortadas 4:5 (760×950) con la 
 - El espacio a la derecha del título del hero queda en blanco a propósito. Ya se probaron y descartaron ahí: un mazo de capturas, una grilla de recortes, una consola de código y una trayectoria punteada con etiqueta de disponibilidad.
 - Chrome no anima elementos dentro de `<mask>`/`<defs>` de SVG: animar elementos visibles.
 - Evento `project:open` (detail = índice en `PROJECTS`): `Projects` lo escucha para abrir el modal desde cualquier parte de la página.
-- Capturas de proyectos: sacarlas con Edge headless a 2x (`msedge --headless=new --force-device-scale-factor=2 --window-size=1440,900 --screenshot=… URL`) y recortar/exportar con PIL; las capturas del navegador de Claude salen a baja resolución y en JPEG, y se ven pixeladas.
+- Evento `contact:prefill` (detail = `{ tipo, msg }`): lo dispara "Quiero uno así" en `Demos`; `ContactForm` precarga el pedido (sin pisar un mensaje que la persona ya escribió) y enfoca el nombre.
+- `ProjectModal` recibe un `ModalItem` genérico (`meta`, `tags`) más `urlLabel`/`nextLabel` y acciones extra como `children`: lo usan `Projects` y `Demos`.
+- `Demos`: la primera card ocupa todo el ancho y el resto va de a dos; botones "Ver demo" (sitio en vivo) y "Quiero uno así" (baja a contacto precargado).
+- Capturas de proyectos: sacarlas con Edge headless a 2x (`msedge --headless=new --force-device-scale-factor=2 --window-size=1440,900 --screenshot=… URL`) y recortar/exportar con PIL; las capturas del navegador de Claude salen a baja resolución y en JPEG, y se ven pixeladas. Para sitios con intro o animaciones por scroll (las demos) conviene Playwright con `channel="msedge"`, viewport 1440×720 a 2x: esperar la intro, recorrer la página para disparar las apariciones y después scrollear a la sección.
 - `Projects`: filtro por categoría (solo categorías con proyectos; se oculta si hay una sola), vista `"list"` (usada) o `"grid"` (disponible, no usada), preview flotante que sigue al cursor (solo dispositivos con hover y ≥760px) y `ProjectModal` con foco gestionado, Escape y "Siguiente proyecto".
 - Accesibilidad cuidada: `aria-pressed`, `aria-expanded`/`aria-controls`, `inert` en acordeones cerrados, `role="dialog"` + `aria-modal`, decorativos con `aria-hidden`. Mantener ese nivel.
 

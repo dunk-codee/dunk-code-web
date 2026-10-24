@@ -14,7 +14,7 @@ export function Contact() {
     >
       <div className="relative mx-auto max-w-[1240px]">
         <InView amount={0.5}>
-          <div className="in-rise eyebrow mb-6 text-orange">04 {"// contacto"}</div>
+          <div className="in-rise eyebrow mb-6 text-orange">05 {"// contacto"}</div>
           <h2 className="m-0 max-w-[1100px] text-[clamp(44px,7.6vw,124px)] leading-[.93] font-bold tracking-[-0.055em] text-balance">
             <span className="sr-only">{TITLE}</span>
             {/* Cada palabra sube desde atrás de una máscara, girando y enfocándose. */}
