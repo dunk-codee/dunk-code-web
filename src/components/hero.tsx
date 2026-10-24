@@ -1,18 +1,38 @@
 "use client";
 
-import { Fragment, useRef, type CSSProperties, type ReactNode } from "react";
+import { Fragment, useEffect, useRef, type CSSProperties, type ReactNode } from "react";
+import { gravityDrop } from "@/lib/bounce";
 import { Ball } from "./ball";
-import { INTRO_MS } from "./intro";
+import { afterIntro } from "./intro";
 import { prefersReducedMotion, useScrollFrame } from "@/lib/hooks";
 
 const LEAD =
   "Somos Dunk Code. Diseñamos y desarrollamos sitios, apps y sistemas a medida para negocios que necesitan su propia herramienta.";
 
-/** Los delays de entrada son relativos al momento en que sube el telón de carga. */
-const delay = (ms: number): CSSProperties => ({ animationDelay: `${INTRO_MS + ms}ms` });
+/** Los delays de entrada son relativos al momento en que sube el telón de carga (o al inicio, si ya se vio). */
+const delay = (ms: number): CSSProperties => ({ animationDelay: afterIntro(ms) });
 
 export function Hero() {
   const ballRef = useRef<HTMLSpanElement>(null);
+  const dropRef = useRef<HTMLSpanElement>(null);
+  const squashRef = useRef<HTMLSpanElement>(null);
+  const rollRef = useRef<HTMLSpanElement>(null);
+
+  // Sin intro (ya vista en la sesión), la pelota del título cae con física real desde arriba de la pantalla,
+  // en el mismo momento que tenía el `ball-drop` CSS (que en ese caso queda desactivado en globals.css).
+  useEffect(() => {
+    const [drop, squash, roll] = [dropRef.current, squashRef.current, rollRef.current];
+    if (!drop || !squash || !roll || prefersReducedMotion() || !document.documentElement.hasAttribute("data-intro-seen")) return;
+    const anim = gravityDrop(drop.getBoundingClientRect().bottom + 20);
+    const opts: KeyframeAnimationOptions = { duration: anim.duration, delay: Math.max(0, 650 - performance.now()), fill: "backwards" };
+    const anims = [
+      drop.animate(anim.move, opts),
+      squash.animate(anim.shape, opts),
+      roll.animate([{ rotate: "-300deg" }, { rotate: "0deg" }], { ...opts, easing: "cubic-bezier(.15,.6,.3,1)" }),
+    ];
+    drop.style.opacity = "1";
+    return () => anims.forEach((a) => a.cancel());
+  }, []);
 
   useScrollFrame(() => {
     if (ballRef.current && !prefersReducedMotion()) ballRef.current.style.transform = `rotate(${scrollY * 0.2}deg)`;
@@ -41,9 +61,11 @@ export function Hero() {
         <span aria-hidden className="block pb-[.06em] whitespace-nowrap perspective-[900px]">
           <Chars text="a tu medida" at={200} />
           <span ref={ballRef} data-hero-ball className="pointer-events-none relative z-3 ml-[.045em] inline-block size-[.19em] will-change-transform">
-            <span className="ball-drop block size-full origin-bottom" style={delay(650)}>
-              <span className="ball-roll block size-full" style={delay(650)}>
-                <Ball />
+            <span ref={dropRef} className="ball-drop block size-full origin-bottom" style={delay(650)}>
+              <span ref={squashRef} className="block size-full origin-bottom">
+                <span ref={rollRef} className="ball-roll block size-full" style={delay(650)}>
+                  <Ball />
+                </span>
               </span>
             </span>
           </span>

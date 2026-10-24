@@ -1,23 +1,37 @@
 "use client";
 
-import { useEffect, useRef, useState, type CSSProperties } from "react";
-import { Ball } from "./ball";
+import { useEffect, useRef, useState } from "react";
+import { gravityDrop } from "@/lib/bounce";
 import { prefersReducedMotion } from "@/lib/hooks";
+import { Ball } from "./ball";
 
-/** El "punto" del logo del footer: cae como una pelota de básquet la primera vez que entra en pantalla. */
+/**
+ * El "punto" del logo del footer: la primera vez que entra en pantalla cae como una pelota de básquet,
+ * con gravedad real, piques que pierden energía, aplastamiento en cada golpe y un giro que va frenando.
+ */
 export function FooterBall() {
   const ref = useRef<HTMLSpanElement>(null);
-  const [phase, setPhase] = useState<"idle" | "waiting" | "dropping">("idle");
+  const move = useRef<HTMLSpanElement>(null);
+  const shape = useRef<HTMLSpanElement>(null);
+  const turn = useRef<HTMLSpanElement>(null);
+  const [waiting, setWaiting] = useState(false);
 
   useEffect(() => {
     const el = ref.current;
     if (!el || prefersReducedMotion() || el.getBoundingClientRect().top <= innerHeight) return;
-    setPhase("waiting");
+    setWaiting(true);
     const io = new IntersectionObserver(
       ([e]) => {
-        if (!e.isIntersecting) return;
-        setPhase("dropping");
+        if (!e.isIntersecting || !move.current || !shape.current || !turn.current) return;
         io.disconnect();
+        const anim = gravityDrop(innerHeight * 0.7);
+        move.current.animate(anim.move, anim.duration);
+        shape.current.animate(anim.shape, anim.duration);
+        turn.current.animate([{ rotate: "-300deg" }, { rotate: "0deg" }], {
+          duration: anim.duration,
+          easing: "cubic-bezier(.15,.6,.3,1)",
+        });
+        setWaiting(false);
       },
       { threshold: 1, rootMargin: "0px 0px -12% 0px" },
     );
@@ -25,15 +39,13 @@ export function FooterBall() {
     return () => io.disconnect();
   }, []);
 
-  const dropping = phase === "dropping";
   return (
     <span ref={ref} aria-hidden className="mr-[.06em] ml-[.04em] inline-block size-[.27em]">
-      <span
-        className={`block size-full origin-bottom ${dropping ? "ball-drop" : ""} ${phase === "waiting" ? "opacity-0" : ""}`}
-        style={{ "--drop-from": "-70vh" } as CSSProperties}
-      >
-        <span className={`block size-full ${dropping ? "ball-roll" : ""}`}>
-          <Ball />
+      <span ref={move} className={`block size-full ${waiting ? "opacity-0" : ""}`}>
+        <span ref={shape} className="block size-full origin-bottom">
+          <span ref={turn} className="block size-full">
+            <Ball />
+          </span>
         </span>
       </span>
     </span>

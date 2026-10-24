@@ -3,6 +3,18 @@ import { IntroBall } from "./intro-ball";
 /** Cuándo empieza a subir el telón (mantener sincronizado con el delay de `.intro` en globals.css). */
 export const INTRO_MS = 1500;
 
+/**
+ * Delay de una entrada que espera a la intro. `--intro` vale 0ms cuando la intro ya se vio en la sesión
+ * (lo setea INTRO_SEEN_SCRIPT en el <html>); si no está, se espera INTRO_MS.
+ */
+export const afterIntro = (ms: number) => `calc(var(--intro, ${INTRO_MS}ms) + ${ms}ms)`;
+
+/**
+ * Script bloqueante del <head>: la intro se muestra una vez por sesión. Corre antes de pintar,
+ * así el telón (CSS puro) ni aparece al refrescar.
+ */
+export const INTRO_SEEN_SCRIPT = `try{var d=document.documentElement;if(sessionStorage.getItem("dc-intro")){d.setAttribute("data-intro-seen","");d.style.setProperty("--intro","0ms")}else sessionStorage.setItem("dc-intro","1")}catch(e){}`;
+
 // Hilos de la red colgando de la mitad delantera del aro (unidades del viewBox, aro centrado en 170,70).
 const NET =
   "M145 70L156 104M195 70L184 104" +
