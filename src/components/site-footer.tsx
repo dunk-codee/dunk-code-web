@@ -1,9 +1,11 @@
 import { NAV } from "@/lib/content";
 import { FooterBall } from "./footer-ball";
+import { OverscrollColor } from "./overscroll-color";
 
 export function SiteFooter() {
   return (
     <footer className="relative z-[2] border-t border-ink-2 bg-ink px-gutter pb-7 text-paper">
+      <OverscrollColor />
       <div
         aria-label="Dunk Code"
         className="flex items-baseline justify-center py-[clamp(40px,6vw,90px)] pb-[clamp(24px,3vw,40px)] text-[clamp(60px,16vw,290px)] leading-none"

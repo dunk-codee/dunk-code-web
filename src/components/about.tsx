@@ -34,8 +34,8 @@ export function About() {
             const d = i * 180;
             return (
               <InView key={m.name} amount={0.3}>
-                {/* Hover: la card sube y se resalta en naranja; la otra se apaga. */}
-                <article className="group transition-opacity duration-500 ease-snap group-has-[article:hover]/team:opacity-45 hover:opacity-100!">
+                {/* Hover: la card sube y se resalta en naranja; la otra se apaga. Solo con mouse: en touch el :hover queda pegado al mantener apretado y se apagaban las dos. */}
+                <article className="group transition-opacity duration-500 ease-snap [@media(hover:hover)]:group-has-[article:hover]/team:opacity-45 hover:opacity-100!">
                   {/* Sube el contenido, no el <article>: si subiera el área del hover, con el mouse en el borde de abajo la perdería y entraría en bucle. */}
                   <div className="flex flex-col gap-4 transition-[translate] duration-500 ease-snap group-hover:-translate-y-3">
                     {/* La card se abre de abajo hacia arriba, un telón naranja sube y la foto se enfoca mientras se aleja. */}
