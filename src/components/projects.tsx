@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { PROJECTS, type Project } from "@/lib/content";
 import { prefersReducedMotion } from "@/lib/hooks";
 import { at } from "@/lib/motion";
+import { ArrowIcon, PrimaryCta, TextCta } from "./cta";
 import { InView } from "./in-view";
 import { ProjectModal } from "./project-modal";
 
@@ -112,31 +113,10 @@ function CaseStudy({ project: p, index, onOpen }: { project: Project; index: num
               ))}
             </ul>
             <div className="in-rise mt-2 flex flex-wrap items-center gap-x-8 gap-y-4" style={at(560 + p.features.length * 80)}>
-              <button
-                type="button"
-                onClick={onOpen}
-                className="group relative inline-flex items-center gap-3 pb-2 text-[clamp(19px,1.6vw,22px)] leading-none font-bold tracking-[-0.03em] text-ink focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-orange"
-              >
-                Ver el caso
-                <span aria-hidden className="grid size-8 place-items-center rounded-full bg-orange text-ink transition-transform duration-500 ease-snap group-hover:scale-105">
-                  <ArrowIcon className="w-3.5 transition-transform duration-500 ease-snap group-hover:translate-x-0.5" />
-                </span>
-                <span aria-hidden className="absolute inset-x-0 bottom-0 h-0.5 bg-line-2" />
-                <span aria-hidden className="absolute inset-x-0 bottom-0 h-0.5 origin-left scale-x-0 bg-orange transition-transform duration-600 ease-snap group-hover:scale-x-100" />
-              </button>
-              {p.url && (
-                <a
-                  href={p.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group inline-flex items-center gap-2 font-mono text-[13px] font-medium text-ink-2 transition-colors duration-250 hover:text-orange-deep"
-                >
+              <PrimaryCta onClick={onOpen}>Ver el caso</PrimaryCta>
+              {p.url && <TextCta href={p.url} globe>
                   Visitar sitio
-                  <span aria-hidden className="transition-transform duration-450 ease-snap group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
-                    ↗
-                  </span>
-                </a>
-              )}
+                </TextCta>}
             </div>
           </div>
         </div>
@@ -264,27 +244,9 @@ function Arrow({ dir, onClick }: { dir: -1 | 1; onClick: () => void }) {
       className="group grid h-9 w-11 place-items-center text-ink transition-colors duration-300 hover:text-orange focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange"
     >
       <ArrowIcon
-        long
+        kind="long"
         className={`w-7 transition-transform duration-450 ease-snap ${dir < 0 ? "-scale-x-100 group-hover:-translate-x-1" : "group-hover:translate-x-1"}`}
       />
     </button>
-  );
-}
-
-/** Flecha hacia la derecha en SVG (centrada de verdad, a diferencia del carácter "→" de la tipografía mono). */
-function ArrowIcon({ long = false, className = "" }: { long?: boolean; className?: string }) {
-  return (
-    <svg
-      aria-hidden
-      viewBox={long ? "0 0 28 12" : "0 0 14 12"}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.6}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className={`block ${className}`}
-    >
-      <path d={long ? "M1 6H27M22 1L27 6L22 11" : "M1 6H13M8 1L13 6L8 11"} />
-    </svg>
   );
 }

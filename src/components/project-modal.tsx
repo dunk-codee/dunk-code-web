@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { useBodyLock, useEscape } from "@/lib/hooks";
+import { PillCta } from "./cta";
 
 /** Lo que muestra el modal; lo usan tanto los proyectos como las demos. */
 export type ModalItem = {
@@ -54,17 +55,23 @@ export function ProjectModal({
         aria-modal="true"
         aria-labelledby="project-title"
         onClick={(e) => e.stopPropagation()}
-        className="relative max-h-[calc(100vh-32px)] w-full max-w-[980px] animate-modal-up overflow-auto rounded-[28px] bg-paper"
+        className="relative max-h-[calc(100vh-32px)] w-full max-w-[980px] animate-modal-up overflow-auto rounded-[28px] bg-paper [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
-        <button
-          ref={closeRef}
-          type="button"
-          onClick={onClose}
-          aria-label="Cerrar"
-          className="absolute top-4 right-4 z-[2] size-11 rounded-full bg-ink font-mono text-lg text-paper"
-        >
-          ✕
-        </button>
+        {/* Capa pegajosa de alto cero: la X queda fija arriba aunque se scrollee el modal (en mobile se scrollea mucho). */}
+        <div className="pointer-events-none sticky top-0 z-[2] h-0">
+          <button
+            ref={closeRef}
+            type="button"
+            onClick={onClose}
+            aria-label="Cerrar"
+            className="group pointer-events-auto absolute top-4 right-4 grid size-11 place-items-center rounded-full bg-orange text-ink shadow-[0_6px_18px_-6px_color-mix(in_srgb,var(--color-ink)_50%,transparent)] transition-transform duration-500 ease-snap hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange"
+          >
+            {/* Como el círculo de "Ver el caso": naranja con el ícono en tinta; en hover la X gira un cuarto de vuelta. */}
+            <svg aria-hidden viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth={1.7} strokeLinecap="round" className="block w-3.5 transition-transform duration-500 ease-snap group-hover:rotate-90">
+              <path d="M2 2L12 12M12 2L2 12" />
+            </svg>
+          </button>
+        </div>
         {images.length ? (
           <div className="border-b border-line bg-sand">
             <div className="relative aspect-[16/8]">
@@ -107,26 +114,19 @@ export function ProjectModal({
             <h3 id="project-title" className="m-0 text-[clamp(36px,5vw,64px)] leading-[.95] font-bold tracking-[-0.05em]">
               {project.name}
             </h3>
-            {/* Botones debajo del título para que se vean sin scrollear el modal. */}
-            <div className="mt-3 flex flex-wrap gap-2.5">
-              <a
-                href={project.url ?? "#"}
-                target={project.url ? "_blank" : undefined}
-                rel="noreferrer"
-                aria-disabled={!project.url}
-                className="flex h-12 items-center rounded-full bg-ink px-[22px] text-[15px] font-medium text-paper hover:bg-ink-2 aria-disabled:pointer-events-none aria-disabled:opacity-60"
-              >
-                {urlLabel} ↗
-              </a>
+            {/* Acciones debajo del título, para que se vean sin scrollear el modal: píldoras con el efecto de
+                "Hablemos" del nav. Si hay una acción propia (las demos: "Quiero uno así") esa es la llena. */}
+            <div className="mt-4 flex flex-wrap gap-2.5">
               {children}
+              {project.url && (
+                <PillCta href={project.url} globe variant={children ? "outline" : "solid"}>
+                  {urlLabel}
+                </PillCta>
+              )}
               {onNext && (
-                <button
-                  type="button"
-                  onClick={onNext}
-                  className="h-12 rounded-full border border-ink px-[22px] text-[15px] font-medium text-ink transition-colors hover:bg-ink hover:text-paper"
-                >
-                  {nextLabel} →
-                </button>
+                <PillCta onClick={onNext} icon="right" variant="outline">
+                  {nextLabel}
+                </PillCta>
               )}
             </div>
           </div>
