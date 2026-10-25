@@ -16,7 +16,9 @@ const dotsOf = (c: Curve, n: number) =>
   Array.from({ length: n }, (_, k) => {
     const t = (k + 0.5) / n;
     const at = (i: 0 | 1) => (1 - t) ** 3 * c[0][i] + 3 * (1 - t) ** 2 * t * c[1][i] + 3 * (1 - t) * t ** 2 * c[2][i] + t ** 3 * c[3][i];
-    return [at(0), at(1)] as const;
+    // Redondeado: el último decimal del flotante cambia entre servidor y navegador y rompe la hidratación.
+    const round = (v: number) => Math.round(v * 100) / 100;
+    return [round(at(0)), round(at(1))] as const;
   });
 const DOTS_LAPTOP = dotsOf(LINK_LAPTOP, 18);
 const DOTS_PHONE = dotsOf(LINK_PHONE, 11);
@@ -98,7 +100,7 @@ export function HeroConnect() {
   return (
     <div
       aria-hidden
-      className="pointer-events-none absolute top-[clamp(170px,26vh,250px)] right-[clamp(20px,4vw,56px)] hidden w-[min(42vw,660px)] min-[1100px]:block"
+      className="pointer-events-none mb-[min(1.25vw,22px)] hidden max-w-[660px] min-w-0 flex-1 min-[1100px]:block"
     >
       <svg viewBox="0 0 650 310" fill="none" strokeLinecap="round" strokeLinejoin="round" className="w-full overflow-visible">
         <path d="M0 300H650" pathLength={1} strokeWidth={1} className="hc-draw stroke-line-2" style={d(0)} />

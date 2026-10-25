@@ -62,27 +62,30 @@ export function Hero() {
         <Typed text="Estudio de desarrollo" at={500} />
       </div>
 
-      <h1 className="m-0 text-[clamp(44px,11.6vw,204px)] leading-[.9] font-bold tracking-[-0.058em] text-ink">
-        <span className="sr-only">Software a tu medida</span>
-        <span aria-hidden className="block pb-[.06em] perspective-[900px]">
-          <Chars text="Software" at={0} />
-        </span>
-        <span aria-hidden className="block pb-[.06em] whitespace-nowrap perspective-[900px]">
-          <Chars text="a tu medida" at={200} />
-          <span data-hero-ball className="pointer-events-none relative z-3 ml-[.045em] inline-block size-[.19em]">
-            <span ref={dropRef} className="ball-drop block size-full origin-bottom" style={delay(650)}>
-              <span ref={squashRef} className="block size-full origin-bottom">
-                <span ref={rollRef} className="ball-roll block size-full" style={delay(650)}>
-                  <span ref={spinRef} className="block size-full will-change-transform">
-                    <Ball />
+      {/* Con el dibujo a la vista, título y dibujo van en fila: el dibujo toma el ancho que deja el título y no lo pisa. */}
+      <div className="min-[1100px]:flex min-[1100px]:items-end min-[1100px]:justify-between min-[1100px]:gap-[clamp(24px,2.5vw,48px)]">
+        <h1 className="m-0 shrink-0 text-[clamp(44px,11.6vw,204px)] leading-[.9] font-bold tracking-[-0.058em] text-ink">
+          <span className="sr-only">Software a tu medida</span>
+          <span aria-hidden className="block pb-[.06em] perspective-[900px]">
+            <Chars text="Software" at={0} />
+          </span>
+          <span aria-hidden className="block pb-[.06em] whitespace-nowrap perspective-[900px]">
+            <Chars text="a tu medida" at={200} />
+            <span data-hero-ball className="pointer-events-none relative z-3 ml-[.045em] inline-block size-[.19em]">
+              <span ref={dropRef} className="ball-drop block size-full origin-bottom" style={delay(650)}>
+                <span ref={squashRef} className="block size-full origin-bottom">
+                  <span ref={rollRef} className="ball-roll block size-full" style={delay(650)}>
+                    <span ref={spinRef} className="block size-full will-change-transform">
+                      <Ball />
+                    </span>
                   </span>
                 </span>
               </span>
             </span>
           </span>
-        </span>
-      </h1>
-      <HeroConnect />
+        </h1>
+        <HeroConnect />
+      </div>
 
       <div className="flex flex-wrap items-end justify-between gap-8">
         <div className="flex max-w-120 flex-col gap-6.5">
