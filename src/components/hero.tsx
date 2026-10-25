@@ -64,7 +64,8 @@ export function Hero() {
 
       {/* Con el dibujo a la vista, título y dibujo van en fila: el dibujo toma el ancho que deja el título y no lo pisa. */}
       <div className="min-[1100px]:flex min-[1100px]:items-end min-[1100px]:justify-between min-[1100px]:gap-[clamp(24px,2.5vw,48px)]">
-        <h1 className="m-0 shrink-0 text-[clamp(44px,11.6vw,204px)] leading-[.9] font-bold tracking-[-0.058em] text-ink">
+        {/* En mobile crece más rápido con el ancho (el renglón "a tu medida" + pelota mide ~5.5em y no se corta) y se frena en 88px, lo que mide al entrar en md. */}
+        <h1 className="m-0 shrink-0 text-[clamp(44px,calc(16vw-6px),88px)] leading-[.9] md:text-[clamp(44px,11.6vw,204px)] font-bold tracking-[-0.058em] text-ink">
           <span className="sr-only">Software a tu medida</span>
           <span aria-hidden className="block pb-[.06em] perspective-[900px]">
             <Chars text="Software" at={0} />
