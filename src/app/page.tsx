@@ -8,10 +8,12 @@ import { RevealObserver } from "@/components/reveal-observer";
 import { Services } from "@/components/services";
 import { SiteFooter } from "@/components/site-footer";
 import { SiteHeader } from "@/components/site-header";
+import { StructuredData } from "@/components/structured-data";
 
 export default function Home() {
   return (
     <>
+      <StructuredData />
       <Intro />
       <SiteHeader />
       <main>
