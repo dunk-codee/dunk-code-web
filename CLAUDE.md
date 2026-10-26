@@ -33,11 +33,14 @@ src/
     actions.ts     # Server Action sendContact → Resend
     globals.css    # tokens de diseño, keyframes, utilidades custom
     icon.svg       # favicon
+    apple-icon.tsx, opengraph-image.tsx, manifest.ts, robots.ts, sitemap.ts, llms.txt/route.ts  # SEO/GEO (ver abajo)
   components/      # una sección o pieza por archivo (kebab-case, export con nombre)
   lib/
     content.ts         # TODO el contenido editable (proyectos, servicios, equipo, canales, nav)
     contact-schema.ts  # schema Zod compartido cliente/servidor
     hooks.ts           # hooks de cliente compartidos
+    site.ts            # URL, título, descripción, keywords y ubicación del estudio (fuente del SEO)
+  assets/              # fuentes .ttf para las imágenes generadas con next/og
 ```
 
 Orden de la página (`page.tsx`): `Intro` → `SiteHeader` → `Hero` → `About` (#nosotros) → `Services` (#servicios) → `Projects` (#proyectos) → `Demos` (#demos) → `Contact` (#contacto) → `SiteFooter` + `RevealObserver`.
@@ -53,6 +56,16 @@ Todo el texto/datos de proyectos, servicios, equipo y canales vive en `src/lib/c
 Pendientes de completar (placeholders): los `url` de `PROJECTS` (sin `url`, el botón "Visitar sitio" queda deshabilitado). Las capturas de proyectos son placeholders con rayas (`stripes-light`).
 
 Fotos del equipo: `/public/profiles/` en WebP, recortadas 4:5 (760×950) con la cara al mismo tamaño y altura en las dos (≈30% del ancho, centro a ≈42% de la altura) para que las cards queden parejas.
+
+## SEO y GEO
+
+- Todo sale de `lib/site.ts` (URL, título, descripción, keywords, ubicación) y de `content.ts`: no repetir textos en los archivos de SEO.
+- URL canónica: `NEXT_PUBLIC_SITE_URL`; si falta, el dominio de producción de Vercel (`VERCEL_PROJECT_PRODUCTION_URL`) y, si no, `https://dunk-code-web.vercel.app`. Al pasar a dominio propio, setear la variable.
+- `layout.tsx`: `metadataBase`, canonical, Open Graph/Twitter, robots, `geo.*` y verificación de Search Console/Bing por env (`GOOGLE_SITE_VERIFICATION`, `BING_SITE_VERIFICATION`).
+- `StructuredData` (`structured-data.tsx`, en `page.tsx`): JSON-LD con el estudio (`ProfessionalService`), sitio, página, equipo, servicios, proyectos y demos.
+- `robots.ts` deja pasar explícitamente a los bots de IA (GEO); `llms.txt` es un resumen en Markdown para modelos, generado de `content.ts`.
+- Todas estas rutas tienen que quedar estáticas (`○` en el build): con Cache Components, un `readFile` asíncrono o un `new Date()` suelto las vuelven dinámicas. Por eso las imágenes usan `readFileSync` y el sitemap toma la fecha de un helper con `"use cache"`.
+- `ImageResponse` (satori) exige `display: flex` en todo `div` con más de un hijo, y no lee CSS: los colores van en hex copiados de los tokens.
 
 ## Formulario de contacto
 

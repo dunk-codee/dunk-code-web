@@ -6,7 +6,7 @@ import { at } from "@/lib/motion";
 
 /** Párrafo cuyas palabras entran desde una máscara y se encienden una por una a medida que la sección entra en pantalla. */
 export function AboutWords({ words }: { words: { t: string; accent: boolean }[] }) {
-  const ref = useRef<HTMLParagraphElement>(null);
+  const ref = useRef<HTMLHeadingElement>(null);
   const lit = useRef(-1);
 
   useScrollFrame(() => {
@@ -26,7 +26,7 @@ export function AboutWords({ words }: { words: { t: string; accent: boolean }[] 
   });
 
   return (
-    <p
+    <h2
       ref={ref}
       className="m-0 max-w-[1040px] text-[clamp(30px,4.6vw,66px)] leading-[1.08] font-medium tracking-[-0.035em] text-pretty"
     >
@@ -45,6 +45,6 @@ export function AboutWords({ words }: { words: { t: string; accent: boolean }[] 
           </span>{" "}
         </Fragment>
       ))}
-    </p>
+    </h2>
   );
 }
