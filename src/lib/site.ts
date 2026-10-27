@@ -1,15 +1,19 @@
 // Datos del sitio para SEO: metadatos, robots, sitemap, imagen para compartir, datos estructurados y llms.txt.
 
+/** Normaliza un dominio o URL: sin espacios, con `https://` si falta y sin barra final. Vacío → undefined. */
+const toUrl = (value?: string) => {
+  const v = value?.trim().replace(/\/+$/, "");
+  if (!v) return undefined;
+  return /^https?:\/\//i.test(v) ? v : `https://${v}`;
+};
+
 /**
- * URL pública canónica, sin barra final. Con dominio propio, setear `NEXT_PUBLIC_SITE_URL` (ej. https://dunkcode.com.ar).
- * En Vercel, si no está, usa el dominio de producción del proyecto.
+ * URL pública canónica, sin barra final. Con dominio propio, setear `NEXT_PUBLIC_SITE_URL` (ej. https://dunkcode.com.ar;
+ * también acepta el dominio solo). En Vercel, si no está, usa el dominio de producción del proyecto.
+ * Si la variable no forma una URL válida, el build se caía con "Invalid URL" en `metadataBase` (layout.tsx).
  */
-export const SITE_URL = (
-  process.env.NEXT_PUBLIC_SITE_URL ??
-  (process.env.VERCEL_PROJECT_PRODUCTION_URL
-    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : "https://dunk-code-web.vercel.app")
-).replace(/\/$/, "");
+export const SITE_URL =
+  toUrl(process.env.NEXT_PUBLIC_SITE_URL) ?? toUrl(process.env.VERCEL_PROJECT_PRODUCTION_URL) ?? "https://dunk-code-web.vercel.app";
 
 export const SITE_NAME = "Dunk Code";
 
