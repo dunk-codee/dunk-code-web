@@ -109,9 +109,12 @@ export function IntroBall() {
 
     let anims: Animation[] = [];
     let alive = true;
+    let scrollAtRun = 0;
     const run = () => {
       if (!alive) return;
       anims.forEach((a) => a.cancel());
+      scrollAtRun = scrollY;
+      x.style.top = "";
       const box = x.parentElement!;
       const f = flight(box.getBoundingClientRect(), parseFloat(getComputedStyle(box).fontSize), hero.getBoundingClientRect());
       const opts: KeyframeAnimationOptions = { duration: f.end, delay: DELAY, fill: "both" };
@@ -132,12 +135,23 @@ export function IntroBall() {
         .catch(() => {});
     };
 
+    // La capa es fija y el vuelo apunta adonde estaba la pelota del título al medirla: si la página se mueve
+    // (en el celular basta un toque durante la intro), aterrizaba en el medio de la pantalla. Mientras está en
+    // el aro el vuelo todavía no depende del título y se vuelve a medir sin saltos; una vez que sale de la red,
+    // la pelota se corre con la página.
+    const onScroll = () => {
+      if ((document.timeline.currentTime as number) - start < DELAY + T_EXIT) run();
+      else x.style.top = `${scrollAtRun - scrollY}px`;
+    };
+
     run();
     document.fonts?.ready.then(run);
     addEventListener("resize", run);
+    addEventListener("scroll", onScroll, { passive: true });
     return () => {
       alive = false;
       removeEventListener("resize", run);
+      removeEventListener("scroll", onScroll);
       anims.forEach((a) => a.cancel());
     };
   }, []);
