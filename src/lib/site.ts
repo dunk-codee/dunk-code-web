@@ -18,7 +18,7 @@ export const SITE_URL =
 export const SITE_NAME = "Dunk Code";
 
 /** Título de la home (≤60 caracteres para que no lo corte Google). */
-export const SITE_TITLE = "Dunk Code · Software y páginas web a medida en Entre Ríos";
+export const SITE_TITLE = "Dunk Code";
 
 /** Descripción para buscadores (≈155 caracteres). */
 export const SITE_DESCRIPTION =
